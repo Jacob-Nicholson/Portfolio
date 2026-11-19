@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" class="no-snap">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>About — Jacob's Portfolio</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Pontano+Sans:wght@300..700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <a class="back-home" href="index.html" aria-label="Back to home" title="Back to home"><svg viewBox="0 0 10 10" aria-hidden="true"><path d="M.7 .7l8.6 8.6M9.3 .7L.7 9.3"/></svg></a>
+  <nav class="global-nav" aria-label="Site">
+    <a href="Jacob-Nicholson-Resume.pdf" target="_blank" rel="noopener">Resume</a>
+    <a href="https://www.linkedin.com/in/jacob-nicholson-design/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+    <a href="about.html" aria-current="page">About</a>
+  </nav>
+
+  <main class="about-page">
+    <div class="about-text">
+      <p>Jacob Nicholson is a designer interested in computation born in Southeast Ohio. He is currently leading product design for <a href="https://ugen.health/">UGen’s</a> Orthopedics team, attempting to simplify complex processes in physical therapy and recovery.</p>
+      <p>While acquiring his <a href="https://jacobnicholson.myportfolio.com/vcd-bfa-showcase-website">BFA at Kent State University</a> he stayed busy becoming the first person of his design program to ever hold a developer title on the IT solutioning team, where he <a href="https://www.kent.edu/it/dla">worked with computer science students</a> and taught himself to code while sometimes secretly also designing <a href="https://jacobnicholson.myportfolio.com/greeting-cards-ksu-dpae">greeting cards</a> for the Division of Philanthropy. Jacob was selected to be a part of the Design Innovation Hub’s student fellowship in 2024, where he <a href="https://www.kent.edu/designinnovation/news/five-challenges-countless-possibilities">led collaborative research projects</a>.</p>
+      <p>In 2025, he interned as a Graphic Designer at the Ohio Department of Natural Resources, where he was ecstatic to <a href="https://jacobnicholson.myportfolio.com/ohio-department-of-natural-resources">help celebrate the beauty of his home</a>.</p>
+      <p>Outside of work, Jacob loves to go backpacking, be it in a new forest or a new country, and revisit <a href="https://jacobnicholson.myportfolio.com/art-1">art projects</a>. He’s recently picked up an interest in <span id="interest">specialty tea</span>.</p>
+    </div>
+    <div class="about-photo">
+      <img src="images/about.jpg" alt="Jacob standing on a bridge over a river with mountains and banners behind him while backpacking in Austria">
+    </div>
+  </main>
+  <script>
+    // Cycles the "recently picked up an interest in…" phrase every 3 seconds
+    const interests = [
+      "specialty tea",
+      "white-water kayaking",
+      "sewing",
+      "structural color",
+      "moshing",
+      "cast iron pans",
+      "watch repair",
+      "the good paprika"
+    ];
+
+    const el = document.getElementById("interest");
+    let i = 0;
+
+    setInterval(() => {
+      i = (i + 1) % interests.length;
+      el.textContent = interests[i];
+    }, 3000);
+  </script>
+</body>
+</html>

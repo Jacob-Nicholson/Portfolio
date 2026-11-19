@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Discovering a New Way to Coach — Jacob's Portfolio</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="gate.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Pontano+Sans:wght@300..700&display=swap" rel="stylesheet">
+  <script type="speculationrules">
+  {"prefetch": [{"where": {"selector_matches": ".dock-parent[href$='.html'], .dock-close"}, "eagerness": "moderate"}]}
+  </script>
+</head>
+<body style="--case-accent:#5866F2; --case-tint:#EAECF9;">
+  <nav class="global-nav" aria-label="Site">
+    <a href="Jacob-Nicholson-Resume.pdf" target="_blank" rel="noopener">Resume</a>
+    <a href="https://www.linkedin.com/in/jacob-nicholson-design/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+    <a href="about.html">About</a>
+  </nav>
+
+  <!-- Page dock: project dots; the current project opens into its chapter dots -->
+  <nav class="page-dock on-case" aria-label="Projects">
+    <a class="dock-close" href="index.html" aria-label="Close project and return home" title="Back to home"><svg viewBox="0 0 10 10" aria-hidden="true"><path d="M.7 .7l8.6 8.6M9.3 .7L.7 9.3"/></svg></a>
+    <div class="dock-group is-open">
+      <a class="dock-parent" href="#top" aria-current="page" aria-label="Carefully guide recovery" title="Carefully guide recovery"></a>
+      <div class="dock-kids">
+        <a class="dock-kid" href="#overview" aria-label="Overview" title="Overview"></a>
+        <a class="dock-kid" href="#problem" aria-label="Defining the Problem" title="Defining the Problem"></a>
+        <a class="dock-kid" href="#design" aria-label="Considering FDA Constraints" title="Considering FDA Constraints"></a>
+        <a class="dock-kid" href="#part-5" aria-label="Pivoting After a Quick Test" title="Pivoting After a Quick Test"></a>
+        <a class="dock-kid" href="#impact" aria-label="Final Solution" title="Final Solution"></a>
+      </div>
+    </div>
+    <div class="dock-group"><a class="dock-parent" href="case-study-two.html" aria-label="Notify healthcare professionals" title="Notify healthcare professionals"></a></div>
+    <div class="dock-group"><a class="dock-parent" href="case-study-three.html" aria-label="Explore resonance" title="Explore resonance"></a></div>
+    <div class="dock-group"><a class="dock-parent" href="case-study-four.html" aria-label="Facilitate collaboration" title="Facilitate collaboration"></a></div>
+  </nav>
+
+  <section class="case-intro snap-section" id="overview">
+    <div class="case-intro-card"><img src="images/one-intro.jpg" alt="UGen exercise screen showing rep 2 of 8, a range of motion of 97 degrees and an over 90 degree goal"></div>
+    <div class="case-intro-text">
+      <h1>Discovering a New Way<br>to Coach<span class="dot-accent"></span></h1>
+      <p class="case-client">UGen Health Inc</p>
+      <p class="case-facts"><span>2026</span><span>Product Designer</span><span>1 month</span></p>
+      <p class="section-body case-summary">UGen Health is a rehabilitation technology start-up combining intelligent motion sensors with real-time software corrections to help patients and athletes recover faster with perfect exercise form. In this project I focused on how to make this relationship between robotics, information and movement as natural as possible.</p>
+    </div>
+  </section>
+
+  <section class="case-row" id="problem">
+    <div class="case-row-card"><img src="images/one-problem.jpg" alt="Two exercise screens: one reading “Nicely done!” and one reading “Keep Palms Up”" loading="lazy"></div>
+    <div class="case-row-text">
+      <h2>Defining the Problem</h2>
+      <p class="section-body">UGen’s sensors were sending data to their application at a few key points in a patient’s rep, and yet we were only communicating to the patient an integer and a confirmation. I felt the existing solution left patients and athletes in the dark about multiple key data points that could vastly affect their recovery.</p>
+    </div>
+  </section>
+  <section class="case-row" id="design">
+    <div class="case-row-card"><img src="images/one-fda.jpg" alt="Grid of exercise screens exploring color gradients for rep quality" loading="lazy"></div>
+    <div class="case-row-text">
+      <h2>Considering FDA Constraints</h2>
+      <p class="section-body">One concept I explored used color to communicate the quality of each rep at a quick glance. However, since UGen’s software side is registered as a general wellness product, and in theory cannot make claims to the patient about their health, we explored how a gradient of color changes the liability claims over preset thresholds. It’s really interesting how such slight visual changes can have broad impacts on what a product is communicating.</p>
+    </div>
+  </section>
+  <section class="case-row" id="part-5">
+    <div class="case-row-card"><img src="images/one-pivot.jpg" alt="Hand-drawn wireframe sketch of the new rep screen" loading="lazy"></div>
+    <div class="case-row-text">
+      <h2>Pivoting After a Quick Test</h2>
+      <p class="section-body">After testing a prototype on a few coworkers, I realized several pieces were communicating the same thing, and I brought my team together to brainstorm a more elegant solution.</p>
+    </div>
+  </section>
+  <section class="case-row" id="impact">
+    <div class="case-row-card has-video"><video src="images/one-final.mp4" autoplay muted loop playsinline preload="metadata" aria-label="Screen recording of the final exercise screen counting reps and range of motion toward a 90 degree goal"></video></div>
+    <div class="case-row-text">
+      <h2>Final Solution</h2>
+      <p class="section-body">By the end of the sprint our key and most memorable experience evolved from coaching with a few interstitial moments to a fluid, data-rich journey. This exploration also unveiled new applications of our product, now enabling us to communicate the over-extension of a rep, covering a common rehab error costing the US healthcare system upwards of $2.7 billion annually.</p>
+    </div>
+  </section>
+
+  <script src="dock.js" defer></script>
+  <footer></footer>
+</body>
+</html>
