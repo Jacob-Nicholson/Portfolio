@@ -12,10 +12,10 @@ Jacob Nicholson's design portfolio: a static site of hand-written HTML, one styl
 firebase emulators:start --only hosting   # serve locally with the production config (cleanUrls etc.)
 python3 -m http.server                    # quick alternative; no cleanUrls
 firebase deploy --only hosting            # publish (runs the link check first)
-npx --yes linkinator@8.1.0 . --recurse --check-fragments --skip '^https?://(?!(localhost|127\.0\.0\.1))'   # link check on its own
+npx --yes linkinator@8.1.0 .             # link check on its own
 ```
 
-The link check is a `predeploy` step in `firebase.json`: it crawls the site from `index.html` and blocks the deploy if any internal page, image, video, audio file or `#section` anchor (including dock links) is missing. External sites aren't checked, so a slow or bot-blocking site (LinkedIn always returns 999) can't stop a deploy. Drop the `--skip` to check them by hand.
+The link check is a `predeploy` step in `firebase.json`; its options live in `linkinator.config.json` (Firebase strips quotes from predeploy commands, so keep the command itself free of shell special characters). It crawls the site from `index.html` and blocks the deploy if any internal page, image, video, audio file or `#section` anchor (including dock links) is missing. External sites aren't checked, so a slow or bot-blocking site (LinkedIn always returns 999) can't stop a deploy. To check them by hand: `npx --yes linkinator@8.1.0 . --skip linkedin.com` (a CLI `--skip` replaces the config's).
 
 `firebase.json` sets `"public": "."`, so **every file in the repo root is deployed publicly** unless it is listed in `hosting.ignore`. Add any new non-site file (notes, configs, docs) to that list.
 

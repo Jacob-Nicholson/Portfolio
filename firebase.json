@@ -2,13 +2,15 @@
   "hosting": {
     "public": ".",
     "predeploy": [
-      "npx --yes linkinator@8.1.0 . --recurse --check-fragments --skip '^https?://(?!(localhost|127\\.0\\.0\\.1))'"
+      "npx --yes linkinator@8.1.0 ."
     ],
     "ignore": [
       "firebase.json",
       ".firebaserc",
       "CLAUDE.md",
+      "linkinator.config.json",
       "**/.*",
+      "**/.*/**",
       "**/node_modules/**",
       "_to_delete/**",
       "*.zip"
