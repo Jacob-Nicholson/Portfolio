@@ -374,64 +374,53 @@
 
         /* ========================================================================
            CASE STUDY LEAVES VIEW
+
+           SENTENCE REMOVAL: only clear the sentence if it still belongs to
+           this case study.
+
+           SIDEBAR FALLBACKS: your existing scroll tracker handles the home reset.
            ======================================================================== */
 
-        else {
+        else if (
+          completionText.textContent ===
+          sentences[studyIndex]
+        ) {
+
+          hmwHeading.classList.remove('has-text');
+
+          completionText.classList.remove('active');
 
 
           /* ----------------------------------------------------------------------
-             SENTENCE REMOVAL
+             CASE METADATA REMOVAL
              ---------------------------------------------------------------------- */
 
-          if (
-            completionText.textContent ===
-            sentences[studyIndex]
-          ) {
-
-            hmwHeading.classList.remove('has-text');
-
-            completionText.classList.remove('active');
-
-
-            /* --------------------------------------------------------------------
-               CASE METADATA REMOVAL
-               -------------------------------------------------------------------- */
-
-            caseMeta.classList.remove('active');
-
-
-            /* --------------------------------------------------------------------
-               CLEAR TEXT AFTER TRANSITION
-               -------------------------------------------------------------------- */
-
-            setTimeout(() => {
-
-              if (!completionText.classList.contains('active')) {
-
-                completionText.textContent = "";
-
-                caseYear.textContent = "";
-
-                caseDescription.textContent = "";
-              }
-
-            }, 200);
-
-
-            /* --------------------------------------------------------------------
-               FORCE DOT UPDATE
-               -------------------------------------------------------------------- */
-
-            window.dispatchEvent(new Event('scroll'));
-          }
+          caseMeta.classList.remove('active');
 
 
           /* ----------------------------------------------------------------------
-             SIDEBAR FALLBACKS
-
-             Your existing scroll tracker handles the home reset.
+             CLEAR TEXT AFTER TRANSITION
              ---------------------------------------------------------------------- */
 
+          setTimeout(() => {
+
+            if (!completionText.classList.contains('active')) {
+
+              completionText.textContent = "";
+
+              caseYear.textContent = "";
+
+              caseDescription.textContent = "";
+            }
+
+          }, 200);
+
+
+          /* ----------------------------------------------------------------------
+             FORCE DOT UPDATE
+             ---------------------------------------------------------------------- */
+
+          window.dispatchEvent(new Event('scroll'));
         }
 
       });
@@ -460,7 +449,8 @@
       const first = document.querySelector('a[href="case-study-one.html"]');
       if (!first) return;
       const phone = window.matchMedia('(max-width: 768px)').matches;
-      first.scrollIntoView({ behavior: 'smooth', block: phone ? 'start' : 'center' });
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      first.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: phone ? 'start' : 'center' });
     });
 
 

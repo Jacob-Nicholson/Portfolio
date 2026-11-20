@@ -12,8 +12,15 @@ html {
   scroll-padding-bottom: 9vh;
   scroll-behavior: smooth;
   height: 100%; /* required for Chrome to reliably register html as the scroll-snap container */
+  font-synthesis: none; /* never fake bold/italic (see TYPE BASELINE) */
+  /* custom dot cursor (see CURSOR section) */
+  cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='11' height='11' viewBox='0 0 8 8'><circle cx='4' cy='4' r='5.3' fill='%23282827'/></svg>") 4 4, auto;
 }
-.left-col { 
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}
+.left-col {
   position: fixed; 
   top: 0; 
   left: 0; 
@@ -75,8 +82,7 @@ width: 40%;
   min-width: 50vw;
   max-width: 50vw;  
   scroll-snap-align: center;     /* Magnetically aligns the row center to viewport center */
-  scroll-snap-stop: always;
-  align-items: right;      /* 🌟 ADDED: Prevents the user from accidentally skipping a row if they scroll fast */
+  scroll-snap-stop: always;      /* 🌟 ADDED: Prevents the user from accidentally skipping a row if they scroll fast */
 } 
 
 /* 🌟 ADDED: Smoothly keeps your hero frame locked on screen alongside left text */
@@ -122,6 +128,7 @@ body{
   background-color: #ffffff;
   padding: 0;
   margin: 0;
+  --case-accent: #5866F2; /* default case-study accent; each page overrides it inline */
 }
 
 .case-study{
@@ -131,18 +138,29 @@ body{
   background-color: gray;
   border-radius: 58px 0px 0px 58px;
   margin: 0;
+  position: relative;
+  overflow: hidden;
+  --card-rgb: 255 255 255; /* card colour as R G B, for the hover gradient */
 }
 
 #case-study-one{
   background-color:  #5866F2;
+  --card-rgb: 88 102 242;
 }
 
 #case-study-two{
   background-color:  #ED0086;
+  --card-rgb: 237 0 134;
 }
 
 #case-study-three{
   background-color:  #EDED00;
+  --card-rgb: 237 237 0;
+}
+
+#case-study-four{
+  background-color:  #00C864;
+  --card-rgb: 0 200 100;
 }
 
 
@@ -194,6 +212,10 @@ font-size: 33pt;
    ========================================================================== */
 
 :root {
+  --case-header: 68px;             /* case-study header band (58px on mobile) */
+  --card-ratio: 1622 / 1338;       /* case-study image card shape */
+  --card-ratio-n: 1.2123;
+
   /* Mobile sizes (ratios of the 23px project dot, snapped to whole pixels) */
   --dock-dot: 23px;                /* project dot diameter */
   --dock-kid: 13px;                /* chapter dot            0.56 */
@@ -493,8 +515,7 @@ footer{
     scroll-snap-type: y mandatory; 
     scroll-padding-top: 9vh;      
     scroll-padding-bottom: 9vh;
-    scroll-behavior: smooth;
-    height: 100%; 
+    height: 100%;
   }
 
   .main-grid {
@@ -604,9 +625,6 @@ footer{
  on <body>, so these blocks style all four case studies.
  ========================================================================== */
 
-body {
---case-accent: #5866F2;
-}
 
 
 /* Coloured dot after each case-study title */
@@ -644,11 +662,12 @@ margin: 0;
   column-gap: 2.5vw;
   align-items: center;
   padding: 4vh 5vw 0 6.8vw;
+  padding-top: var(--case-header); /* clears the slim header band */
   font-family: "Pontano Sans", sans-serif;
 }
 
 .case-intro-card {
-  height: 82vh;
+  height: min(82vh, calc(100vh - var(--case-header) - 4vh));
   min-height: 420px;
   border-radius: 40px;
   background-color: var(--case-accent);
@@ -716,10 +735,6 @@ margin: 0;
    clickable. Built from default.svg / hover.svg, rasterised at 1x and 2x so
    it is sharp on retina. Falls back to the normal cursor if images fail.
    ========================================================================== */
-html {
-  cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='11' height='11' viewBox='0 0 8 8'><circle cx='4' cy='4' r='5.3' fill='%23282827'/></svg>") 4 4, auto;
-}
-
 a,
 button,
 label,
@@ -736,9 +751,6 @@ summary,
    HOME CARD IMAGES
    Each image sits inside its colored card and bleeds off the top/right edge.
    ========================================================================== */
-.case-study { position: relative; overflow: hidden; }
-
-#case-study-four { background-color: #00C864; }
 
 .card-img {
   position: absolute;
@@ -815,6 +827,10 @@ summary,
 }
 
 .scroll-arrow:hover { scale: 1.08; }
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-arrow { transition: none; }
+}
 
 .scroll-arrow:focus-visible { outline: 2px solid #5866F2; outline-offset: 3px; }
 
@@ -909,9 +925,6 @@ summary,
    The browser never fakes bold/italic, so each Pontano Sans weight
    (loaded as a 300–700 variable font) renders as designed.
    ========================================================================== */
-html {
-  font-synthesis: none;
-}
 
 button, input, select, textarea {
   font: inherit;
@@ -1005,6 +1018,10 @@ html.no-snap { scroll-snap-type: none; }
 
 .back-home:hover { transform: scale(1.08); color: var(--dock-x); }
 
+@media (prefers-reduced-motion: reduce) {
+  .back-home { transition: none; }
+}
+
 .back-home:focus-visible {
   outline: 2px solid #5866F2;
   outline-offset: 3px;
@@ -1014,16 +1031,6 @@ html.no-snap { scroll-snap-type: none; }
 
 /* --- Case studies: a slim header band so the top-right links sit on
        white above the first image instead of over it --- */
-:root { --case-header: 68px; }
-
-.case-intro {
-  padding-top: var(--case-header);
-}
-
-.case-intro-card {
-  height: min(82vh, calc(100vh - var(--case-header) - 4vh));
-}
-
 @media (max-width: 768px) {
   :root { --case-header: 58px; }
 
@@ -1055,8 +1062,6 @@ html.no-snap { scroll-snap-type: none; }
    The images are designed as 1622 x 1338 cards (colour, padding and corners
    are part of the artwork), so the card takes that shape instead of a fixed
    height and nothing gets cropped. Width shrinks if needed to fit the screen. */
-:root { --card-ratio: 1622 / 1338; --card-ratio-n: 1.2123; }
-
 .case-intro-card:has(> img),
 .case-row-card:has(> img) {
   height: auto;
@@ -1152,6 +1157,10 @@ html.pw-locked body > *:not(.pw-gate) { visibility: hidden; }
 }
 
 .pw-field button:hover { transform: scale(1.08); }
+
+@media (prefers-reduced-motion: reduce) {
+  .pw-field button { transition: none; }
+}
 
 .pw-field button svg {
   width: 12px;
@@ -1352,7 +1361,6 @@ html.pw-locked body > *:not(.pw-gate) { visibility: hidden; }
 
 
 /* --- Case study one cover: UGen sensors over the bottom-left of the card --- */
-.case-study { position: relative; overflow: hidden; }
 #case-study-one .card-sensors {
   left: -7.92vh;
   top: 41.6%;
@@ -1457,12 +1465,8 @@ html.pw-locked body > *:not(.pw-gate) { visibility: hidden; }
               transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-/* each card's background colour, as R G B, for its hover gradient */
-.case-study          { --card-rgb: 255 255 255; }
-#case-study-one      { --card-rgb: 88 102 242; }   /* #5866F2 */
-#case-study-two      { --card-rgb: 237 0 134; }    /* #ED0086 */
-#case-study-three    { --card-rgb: 237 237 0; }    /* #EDED00 */
-#case-study-four     { --card-rgb: 0 200 100; }    /* #00C864 */
+/* each card's background colour, as R G B, for its hover gradient,
+   is set as --card-rgb on .case-study / #case-study-* near the top of the file */
 
 .case-study .card-img {
   transition: translate 0.7s cubic-bezier(0.22, 1, 0.36, 1);
