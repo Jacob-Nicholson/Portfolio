@@ -1,0 +1,40 @@
+{
+  "hosting": {
+    "public": ".",
+    "predeploy": [
+      "npx --yes linkinator@7.6.1 ."
+    ],
+    "ignore": [
+      "firebase.json",
+      ".firebaserc",
+      "CLAUDE.md",
+      "linkinator.config.json",
+      "**/.*",
+      "**/.*/**",
+      "**/node_modules/**",
+      "_to_delete/**",
+      "*.zip"
+    ],
+    "cleanUrls": true,
+    "headers": [
+      {
+        "regex": "^/[^.]*$",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "no-cache"
+          }
+        ]
+      },
+      {
+        "source": "**/*.html",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "no-cache"
+          }
+        ]
+      }
+    ]
+  }
+}

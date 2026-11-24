@@ -1,0 +1,3 @@
+User-agent: *
+Disallow:
+Sitemap: https://jacobnicholson.myportfolio.com/sitemap.xml

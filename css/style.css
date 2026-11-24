@@ -1,0 +1,1699 @@
+/* Parent Grid: 1 Row, 2 Columns */ 
+.main-grid { 
+  display: grid; 
+  grid-template-columns: 1fr 1fr; /* Splits into two equal columns */ 
+  gap: 20px; 
+} 
+
+/* 🌟 ADDED TO BODY: Turns the entire viewport into a vertical scroll snapping runway */
+html {
+  scroll-snap-type: y mandatory; /* Forces a full, confident lock on the nearest card */
+  scroll-padding-top: 9vh;      /* Gives 10% viewport height of structural padding "give" */
+  scroll-padding-bottom: 9vh;
+  scroll-behavior: smooth;
+  height: 100%; /* required for Chrome to reliably register html as the scroll-snap container */
+  font-synthesis: none; /* never fake bold/italic (see TYPE BASELINE) */
+  /* custom dot cursor (see CURSOR section) */
+  cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='11' height='11' viewBox='0 0 8 8'><circle cx='4' cy='4' r='5.3' fill='%23282827'/></svg>") 4 4, auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}
+.left-col {
+  position: fixed; 
+  top: 0; 
+  left: 0; 
+  width: 60%; /* Let layout handle the half-screen split */
+  height: 100vh; 
+  display: flex; 
+  flex-direction: column; 
+  justify-content: center; 
+  padding-left: 5%; 
+  padding-right: 5%; 
+  box-sizing: border-box; 
+  pointer-events: none;   /* this text overlaps the left edge of the cards; never let it eat clicks */
+}
+
+/* 🌟 THE FIX: This container locks text characters perfectly, ignoring screen paddings */
+.text-wrap-lock {
+  min-width: 67ch;
+  max-width: 67ch;
+  width: 67ch;
+}
+
+
+/* 2. MAKE THE INTRODUCTION TEXT FADE OUT ON SCROLL */ 
+.intro-fade { 
+  font-family: "Pontano Sans", sans-serif; 
+  font-optical-sizing: auto; 
+  font-weight: 400; 
+  font-style: normal; 
+  margin: 0; 
+  display: inline; 
+  will-change: opacity;
+} 
+
+/* 3. KEEP THE STICKY PHRASE VISIBLE AND BOLD */ 
+.HMW { 
+display: inline; 
+}
+
+/* Shared typography fallback settings */ 
+.pontano-sans-custom { 
+  font-family: "Pontano Sans", sans-serif; 
+  font-optical-sizing: auto; 
+  font-weight: 400; 
+  font-style: normal; 
+  margin: 0; 
+  display: inline; 
+} 
+
+.right-col-grid { 
+grid-column: 2;             
+display: grid; 
+grid-template-rows: repeat(4, 1fr); 
+gap: 700vh;
+width: 40%; 
+} 
+
+.sub-row { 
+  min-height: 85vh;
+  min-width: 50vw;
+  max-width: 50vw;  
+  scroll-snap-align: center;     /* Magnetically aligns the row center to viewport center */
+  scroll-snap-stop: always;      /* 🌟 ADDED: Prevents the user from accidentally skipping a row if they scroll fast */
+} 
+
+/* 🌟 ADDED: Smoothly keeps your hero frame locked on screen alongside left text */
+.fixed-hero-wrapper {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 50%; /* Locks cleanly onto the right half of the main-grid layout */
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  will-change: opacity;
+}
+
+img { 
+  border-radius: 14px; 
+} 
+
+
+/* --- "How Might We" dots: a period at rest, three bouncing dots while scrolling --- */
+.dot { 
+  display: inline-block; 
+  width: 8px; 
+  height: 8px; 
+  margin-left: 5px; 
+  margin-top: 30px; 
+  background-color: #5866F2; 
+  border-radius: 50%; 
+  opacity: 0; /* Dots 2 and 3 still start hidden */ 
+  will-change: transform; 
+  transition: opacity 0.2s ease; 
+}
+
+/* 🌟 ADDED: Makes the first dot behave like a permanent, tight period on load */
+.period-dot {
+  opacity: 1 !important;  /* Forces it to stay visible right from the start */
+  margin-left: 2px;
+}
+
+
+body{
+  background-color: #ffffff;
+  padding: 0;
+  margin: 0;
+  --case-accent: #5866F2; /* default case-study accent; each page overrides it inline */
+}
+
+.case-study{
+  display: flex;
+  height: 100%;
+  width: 100%;
+  background-color: gray;
+  border-radius: 58px 0px 0px 58px;
+  margin: 0;
+  position: relative;
+  overflow: hidden;
+  --card-rgb: 255 255 255; /* card colour as R G B, for the hover gradient */
+}
+
+#case-study-one{
+  background-color:  #5866F2;
+  --card-rgb: 88 102 242;
+}
+
+#case-study-two{
+  background-color:  #ED0086;
+  --card-rgb: 237 0 134;
+}
+
+#case-study-three{
+  background-color:  #EDED00;
+  --card-rgb: 237 237 0;
+}
+
+#case-study-four{
+  background-color:  #00C864;
+  --card-rgb: 0 200 100;
+}
+
+
+/* Hide the 2nd and 3rd dots when a full sentence is deployed */
+.HMW.has-text .dot:nth-child(even),
+.HMW.has-text .dot:nth-child(odd):not(.period-dot) {
+  opacity: 0 !important;
+  transition: opacity 0.2s ease;
+}
+
+
+.completion-text {
+font-family: "Pontano Sans", sans-serif;
+font-weight: 400;          /* Matches your default regular paragraph font weight */
+font-size: 33pt; 
+display: inline;     /* Changed from inline to inline-block so transforms work perfectly */
+vertical-align: top;       /* Keeps it aligned with the baseline of "How Might We" */
+color: #111;
+
+/* 🌟 THE SMOOTH STARTING STATE */
+opacity: 0;                
+transform: translateY(8px); /* Starts slightly lower down for a subtle lift-off look */
+
+/* Increased from 0.2s to 0.4s and swapped 'ease' for an elegant cinematic curve */
+transition: opacity 0.4s cubic-bezier(0.215, 0.610, 0.355, 1.000), 
+            transform 0.4s cubic-bezier(0.215, 0.610, 0.355, 1.000);
+will-change: opacity, transform;
+}
+
+.completion-text.active {
+/* 🌟 THE ACTIVE STATE */
+opacity: 1;
+transform: translateY(0);   /* Glides smoothly back onto the main horizontal line */
+}
+
+
+h1{
+font-size: 33pt;
+}
+
+/* ==========================================================================
+   ● PAGE DOCK
+   Horizontal row on mobile (36px above the bottom), vertical column on
+   desktop. The open project is a dark dot attached to a flat pill of four
+   chapter dots, with a grey close button just before it. No shadows.
+
+   Every size is a ratio of --dock-dot (the project dot), measured from the
+   design frame, so changing that one number rescales the whole dock.
+   ========================================================================== */
+
+:root {
+  --case-header: 68px;             /* case-study header band (58px on mobile) */
+  --card-ratio: 1622 / 1338;       /* case-study image card shape */
+  --card-ratio-n: 1.2123;
+
+  /* Mobile sizes (ratios of the 23px project dot, snapped to whole pixels) */
+  --dock-dot: 23px;                /* project dot diameter */
+  --dock-kid: 13px;                /* chapter dot            0.56 */
+  --dock-close: 32px;              /* close circle           1.37 */
+  --dock-glyph: 13px;              /* the X inside it        0.55 */
+  --dock-gap: 17px;                /* between projects       0.75 */
+  --dock-closegap: 10px;           /* close > open project   0.46 */
+  --dock-tight: 6px;               /* dot > first chapter    0.28 */
+  --dock-kidgap: 8px;              /* between chapters       0.36 */
+  --dock-tail: 4px;                /* after the last chapter 0.18 */
+
+  --dock-offset: 36px;                            /* distance from bottom of viewport */
+  --dock-idle: #e9e9e9;
+  --dock-pill: #e9e9e9;
+  --dock-ink: #282827;                            /* current project */
+  --dock-kid-bg: #ffffff;
+  --dock-mid: #5f5f5f;                            /* current chapter (dark grey) */
+  --dock-x: #1c1b1f;
+  --dock-ease: cubic-bezier(0.77, 0, 0.175, 1);
+}
+
+@media (min-width: 769px) {
+  :root {                          /* same ratios on the 19px desktop dot */
+    --dock-dot: 19px;
+    --dock-kid: 11px;
+    --dock-close: 26px;
+    --dock-glyph: 10px;
+    --dock-gap: 14px;
+    --dock-closegap: 9px;
+    --dock-tight: 5px;
+    --dock-kidgap: 7px;
+    --dock-tail: 4px;
+  }
+}
+
+.page-dock {
+  position: fixed;
+  inset-inline: 0;
+  bottom: calc(var(--dock-offset) + env(safe-area-inset-bottom, 0px));
+  width: max-content;
+  margin-inline: auto;
+  display: flex;
+  align-items: center;
+  gap: var(--dock-gap);
+  z-index: 80;
+  transition: opacity 0.4s ease;
+}
+
+/* Home page hides the dock until the first case study is reached */
+.page-dock.is-hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* A group = one project. Closed: just a dot. Open: dot + pill. */
+.dock-group {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--dock-tight);
+  border-radius: 999px;
+}
+
+/* The pill sits behind the dot, flush with its left end, as its own layer
+   so opening it only animates opacity. */
+.dock-group::before {
+  content: "";
+  position: absolute;
+  inset: calc(var(--dock-dot) * 0.02) 0;
+  z-index: -1;
+  border-radius: inherit;
+  background-color: var(--dock-pill);
+  opacity: 0;
+}
+
+.dock-group.is-open::before {
+  opacity: 1;
+  animation: dock-fade 0.4s ease backwards;
+}
+
+/* --- project dot --- */
+.dock-parent {
+  position: relative;
+  display: block;
+  flex: none;
+  width: var(--dock-dot);
+  height: var(--dock-dot);
+  border-radius: 50%;
+  background-color: var(--dock-idle);
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.dock-parent::after {           /* generous touch target */
+  content: "";
+  position: absolute;
+  inset: -14px -4px;
+}
+
+.dock-parent:hover { transform: scale(1.1); }
+
+.dock-parent.is-active,
+.dock-group.is-open .dock-parent {
+  background-color: var(--dock-ink);
+  transform: none;
+}
+
+/* --- chapter dots (only the open group has them) --- */
+.dock-kids {
+  display: flex;
+  align-items: center;
+  gap: var(--dock-kidgap);
+  padding: 0 var(--dock-tail) 0 0;
+  transform-origin: left center;   /* grows out of the project dot */
+  animation: dock-open 0.45s var(--dock-ease) 0.1s backwards;
+}
+
+.dock-kid {
+  position: relative;
+  display: block;
+  flex: none;
+  width: var(--dock-kid);
+  height: var(--dock-kid);
+  border-radius: 50%;
+  background-color: var(--dock-kid-bg);
+  transition: background-color 0.3s ease;
+}
+
+.dock-kid::after {
+  content: "";
+  position: absolute;
+  inset: -12px -3px;
+}
+
+.dock-kid:hover { background-color: #d6d6d6; }
+
+.dock-kid.is-current { background-color: var(--dock-mid); }
+
+.dock-kid[aria-disabled="true"] {   /* chapter not on this page yet */
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* --- close: grey circle just before the open project; returns home --- */
+.dock-close {
+  position: relative;
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: var(--dock-close);
+  height: var(--dock-close);
+  border-radius: 50%;
+  background-color: #FE5656;
+  color: var(--dock-x);
+  /* sits close to its project instead of a full project-gap away */
+  margin-inline-end: calc(var(--dock-closegap) - var(--dock-gap));
+  transition: transform 0.3s ease;
+  animation: dock-fade 0.4s ease 0.15s backwards;
+}
+
+.dock-close svg {
+  width: var(--dock-glyph);
+  height: var(--dock-glyph);
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: butt;
+}
+
+.dock-close::after {
+  content: "";
+  position: absolute;
+  inset: -8px -2px;
+}
+
+.dock-close:hover { transform: scale(1.08); color: var(--dock-x); }
+
+.dock-parent:focus-visible,
+.dock-kid:focus-visible,
+.dock-close:focus-visible {
+  outline: 2px solid #5866F2;
+  outline-offset: 3px;
+}
+
+@keyframes dock-open {
+  from { opacity: 0; transform: scale(0.4); }
+}
+
+@keyframes dock-fade {
+  from { opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dock-parent, .dock-kid, .dock-close, .page-dock { transition: none; }
+  .dock-kids, .dock-group::before, .dock-close { animation: none; }
+}
+
+
+/* --- Desktop: vertical column in the original spot -------------------- */
+@media (min-width: 769px) {
+  .page-dock {
+    inset: auto;
+    right: 53%;                 /* home page: same place as the old side dots */
+    top: 30%;
+    width: auto;
+    margin: 0;
+    transform: translateY(-50%);
+    flex-direction: column;
+  }
+
+  .page-dock.on-case {          /* case studies: tucked against the left edge */
+    right: auto;
+    left: 32px;
+  }
+
+  .dock-group::before { inset: 0 calc(var(--dock-dot) * 0.02); }
+
+  .dock-group { flex-direction: column; }
+
+  .dock-kids {
+    flex-direction: column;
+    padding: 0 0 var(--dock-tail);
+    transform-origin: center top;
+  }
+
+  .dock-close {
+    margin-inline-end: 0;
+    margin-block-end: calc(var(--dock-closegap) - var(--dock-gap));
+  }
+
+  .dock-parent::after { inset: -4px -14px; }
+  .dock-kid::after    { inset: -3px -12px; }
+  .dock-close::after  { inset: -2px -8px; }
+}
+
+.case-meta {
+  max-width: 46ch;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.4s cubic-bezier(0.215, 0.610, 0.355, 1.000),
+              transform 0.4s cubic-bezier(0.215, 0.610, 0.355, 1.000);
+  will-change: opacity, transform;
+  margin-top: 18px;
+  display: flex;
+  gap: 20px;
+  align-items: baseline;
+}
+
+.case-meta.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.case-year {
+  font-family: "Pontano Sans", sans-serif;
+  font-weight: 600;
+  color: #111;
+  flex-shrink: 0;
+}
+
+.case-description {
+  font-family: "Pontano Sans", sans-serif;
+  font-weight: 400;
+  color: #999;
+  margin: 0;
+  line-height: 1.4;
+}
+
+a,
+a:link,
+a:visited {
+  font-weight: 700;
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+a:hover,
+a:active {
+  color: #4470af;
+}
+
+::selection {
+  background-color: #00C66A;
+  color: #ffffff;         
+}
+
+
+footer{
+  height: 120px;
+  width: 100%;
+  background-color: #ffffff;
+}
+
+
+/* ==========================================================================
+   📱 MOBILE MEDIA QUERIES (PERFECT INITIAL LANDING FIX)
+   ========================================================================== */
+@media (max-width: 768px) {
+
+  /* MIRRORS DESKTOP: Native viewport tracking configurations */
+  html {
+    scroll-snap-type: y mandatory; 
+    scroll-padding-top: 9vh;      
+    scroll-padding-bottom: 9vh;
+    height: 100%;
+  }
+
+  .main-grid {
+    display: block; 
+  }
+
+  .left-col { 
+    position: fixed; 
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100vh; 
+    display: flex; 
+    flex-direction: column; 
+    justify-content: center; 
+    padding-left: 24px; 
+    padding-right: 24px; 
+    box-sizing: border-box; 
+    pointer-events: none; 
+    z-index: 20;
+  }
+
+  /* 🌟 THE REPAIR: Added a 5th row to cleanly accommodate the intro layout space, 
+     and replaced the loose padding with a controlled grid layout tracking matrix */
+  .right-col-grid { 
+    display: grid; 
+    grid-column: auto;             
+    grid-template-rows: repeat(5, 1fr); /* 🌟 Increased from 4 to 5 rows */
+    gap: 120vh; 
+    width: 100%; 
+    padding-top: 0;                     /* 🌟 Reset padding so the first row handles the top */
+  } 
+
+  /* 🌟 THE INTRO LANDING PAD: Instead of hiding the first-child layout slot, 
+     we give it a massive footprint to protect your intro paragraph text on load */
+  .right-col-grid > .sub-row:first-child {
+    display: flex;
+    min-height: 100vh;
+    height: 100vh;
+    scroll-snap-align: start; /* 🌟 Snaps securely to the absolute top of the screen */
+    scroll-snap-stop: always;
+  }
+
+  /* Hide desktop floating asset wrapper safely */
+  .fixed-hero-wrapper {
+    display: none;
+  }
+
+  /* MIRRORS DESKTOP: Identical viewport framing and rigid lock properties */
+  .sub-row { 
+    min-height: 85vh;
+    min-width: 100%;
+    max-width: 100%;  
+    scroll-snap-align: center;     
+    scroll-snap-stop: always;
+    box-sizing: border-box;
+    display: flex;
+    align-items: flex-start; 
+  } 
+
+  /* The 30vw offset lives on the link, not inside it, so the clickable area
+     is exactly the card (a margin inside the <a> made the whole row clickable). */
+  .sub-row > a {
+    display: block;
+    width: 70vw;
+    margin-left: 30vw;
+  }
+
+  .case-study {
+    width: 100%;
+    height: 47vh;
+    margin-left: 0;
+    border-radius: 40px 0 0 40px;
+  }
+
+  .intro-fade,
+  .HMW,
+  .case-meta {
+    position: relative;
+  }
+
+  .text-wrap-lock {
+    width: 48ch;
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  h1,
+  .pontano-sans-custom,
+  .completion-text {
+    font-size: 23pt;
+  }
+
+  .case-meta {
+    max-width: 46ch;
+    margin-top: 24px;
+    gap: 14px;
+  }
+
+
+}
+
+
+/* ==========================================================================
+ 📄 CASE STUDY PAGES
+ Accent colour is set per page via an inline --case-accent custom property
+ on <body>, so these blocks style all four case studies.
+ ========================================================================== */
+
+
+
+/* Coloured dot after each case-study title */
+.dot-accent {
+display: inline-block;
+width: 14px;
+height: 14px;
+border-radius: 50%;
+background-color: var(--case-accent);
+margin-left: 12px;
+vertical-align: middle;
+}
+
+
+/* Body text */
+.section-body {
+font-size: 18px;
+line-height: 1.7;
+color: #333;
+max-width: 62ch;
+margin: 0;
+}
+
+
+/* ==========================================================================
+   📄 CASE INTRO  (first screen of a case study: card left, summary right)
+   Mobile stacks it: card on top, text below.
+   ========================================================================== */
+
+.case-intro {
+  box-sizing: border-box;
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 54vw 1fr;
+  column-gap: 2.5vw;
+  align-items: center;
+  padding: 4vh 5vw 0 6.8vw;
+  padding-top: var(--case-header); /* clears the slim header band */
+  font-family: "Pontano Sans", sans-serif;
+}
+
+.case-intro-card {
+  height: min(82vh, calc(100vh - var(--case-header) - 4vh));
+  min-height: 420px;
+  border-radius: 40px;
+  background-color: var(--case-accent);
+}
+
+.case-intro-text h1 {
+  margin: 0 0 28px;
+  font-weight: 400;
+  line-height: 1.2;
+}
+
+.case-intro-text .case-client {
+  margin: 0 0 6px;
+  font-size: 17px;
+  color: #111;
+}
+
+.case-facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  margin: 0;
+  font-size: 17px;
+  color: #999;
+}
+
+.case-intro-text h2 {
+  margin: 44px 0 18px;
+  font-weight: 400;
+  font-size: 28px;
+  color: #111;
+}
+
+.case-intro-text .section-body {
+  font-size: 17px;
+  line-height: 1.75;
+  max-width: 54ch;
+}
+
+
+@media (max-width: 768px) {
+  .case-intro {
+    display: block;
+    min-height: 0;
+    padding: 0;
+  }
+
+  .case-intro-card {
+    height: 40vh;
+    min-height: 0;
+    border-radius: 0;
+  }
+
+  .case-intro-text { padding: 28px 6% 0; }
+
+  .case-intro-text h1 { font-size: 23pt; margin-bottom: 20px; }
+
+  .case-intro-text h2 { margin-top: 32px; font-size: 24px; }
+
+
+}
+
+/* ==========================================================================
+   ● CURSOR — orange dot (default) that grows into a solid dot over anything
+   clickable. Built from default.svg / hover.svg, rasterised at 1x and 2x so
+   it is sharp on retina. Falls back to the normal cursor if images fail.
+   ========================================================================== */
+a,
+button,
+label,
+summary,
+[role="button"],
+.case-study,
+.dock-parent,
+.dock-kid,
+.dock-close {
+  cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='17' height='17' viewBox='0 0 10 10'><circle cx='5' cy='5' r='3.36' fill='%23282827'/></svg>") 5 5, pointer;
+}
+
+/* ==========================================================================
+   HOME CARD IMAGES
+   Each image sits inside its colored card and bleeds off the top/right edge.
+   ========================================================================== */
+
+.card-img {
+  position: absolute;
+  width: auto;
+  max-width: none;
+  pointer-events: none;
+  user-select: none;
+}
+
+#case-study-one   .card-img { left: 24.37vh; top: -34.98%; height: 126.27%; }
+#case-study-two   .card-img { left: 12.37vh; top: 6.35%; height: 87.8%; }
+#case-study-three .card-img { left: 10.9vh; top: 13%; height: 82.5%; border-radius: 0; }
+#case-study-four  .card-img { left: 10.86vh; top: -51.23%; height: 145.57%; }  /* centred at 1440 x 900; holds still like the others */
+
+@media (max-width: 768px) {
+  /* Mobile cards keep the desktop card's proportions (720 x 765 on a
+     1440 x 900 screen) and place each image as a share of the card, so the
+     composition matches desktop and is identical on every phone. */
+  .case-study { height: 74.375vw; }
+
+  #case-study-one   .card-img { left: 30.4%; }
+  #case-study-two   .card-img { left: 15.4%; }
+  #case-study-three .card-img { left: 13.6%; }
+  #case-study-four  .card-img { left: 50%; transform: translateX(-50%); }
+}
+
+
+/* ==========================================================================
+   GLOBAL NAV + START-SCREEN ARROW
+   ========================================================================== */
+.global-nav {
+  position: fixed;
+  top: 20px;
+  right: 23px;
+  display: flex;
+  gap: 33px;
+  z-index: 90;
+  font-family: "Pontano Sans", sans-serif;
+  font-size: 14px;
+  line-height: 1.3;
+}
+
+.global-nav a {
+  font-weight: 400;
+  color: #999;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.global-nav a:hover { color: #111; }
+
+.scroll-arrow {
+  position: fixed;
+  left: 53.5vw;
+  top: 90.7%;
+  width: 62px;
+  height: 62px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  padding: 0;
+  border: 0;
+  background: none;
+  user-select: none;
+  z-index: 25;                 /* above the fixed intro text so it can be clicked */
+  will-change: opacity;
+  transition: scale 0.3s ease;
+}
+
+.scroll-arrow img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+
+.scroll-arrow:hover { scale: 1.08; }
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-arrow { transition: none; }
+}
+
+.scroll-arrow:focus-visible { outline: 2px solid #5866F2; outline-offset: 3px; }
+
+@media (max-width: 768px) {
+  .global-nav { top: 16px; right: 16px; gap: 20px; font-size: 13px; }
+  .scroll-arrow { left: 50%; top: auto; bottom: 36px; width: 48px; height: 48px; transform: translateX(-50%); }
+}
+
+/* ==========================================================================
+   📄 CASE STUDY ROWS  (card left, text right — one chapter per screen)
+   Shares the .case-intro grid. Card tint comes from --case-tint on <body>.
+   ========================================================================== */
+
+.case-intro-card,
+.case-row-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.case-intro-card img,
+.case-row-card img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 0;
+  user-select: none;
+}
+
+.case-intro .case-summary { margin-top: 44px; }
+
+.case-row {
+  box-sizing: border-box;
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 54vw 1fr;
+  column-gap: 2.5vw;
+  align-items: center;
+  padding: 4vh 5vw 4vh 6.8vw;
+  font-family: "Pontano Sans", sans-serif;
+}
+
+.case-row-card {
+  height: 70vh;
+  min-height: 420px;
+  border-radius: 40px;
+  background-color: var(--case-tint, #edf2ee);
+}
+
+.case-row-text h2 {
+  margin: 0 0 16px;
+  font-weight: 400;
+  font-size: 24px;
+  line-height: 1.25;
+  color: #111;
+}
+
+.case-row-text .section-body {
+  font-size: 16px;
+  line-height: 1.75;
+  max-width: 50ch;
+}
+
+/* one chapter per screen, matching the home page's snapping */
+.case-intro,
+.case-row {
+  scroll-snap-align: center;
+  scroll-snap-stop: always;
+}
+
+@media (max-width: 768px) {
+  .case-row {
+    display: block;
+    min-height: 0;
+    padding: 0 0 72px;
+  }
+
+  .case-row-card {
+    height: 44vh;
+    min-height: 0;
+    border-radius: 0;
+  }
+
+  .case-row-text { padding: 24px 6% 0; }
+
+  .case-intro .case-summary { margin-top: 28px; }
+}
+
+
+/* ==========================================================================
+   TYPE BASELINE
+   The browser never fakes bold/italic, so each Pontano Sans weight
+   (loaded as a 300–700 variable font) renders as designed.
+   ========================================================================== */
+
+button, input, select, textarea {
+  font: inherit;
+}
+
+b, strong { font-weight: 600; }
+
+
+/* ==========================================================================
+   ABOUT PAGE
+   ========================================================================== */
+html.no-snap { scroll-snap-type: none; }
+
+.global-nav a[aria-current="page"] { color: #111; }
+
+.about-page {
+  box-sizing: border-box;
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 30vw minmax(0, 1fr);
+  column-gap: 12vw;
+  align-items: center;
+  padding: 120px 3.9vw 80px 9.6vw;
+  color: #111;
+  font-family: "Pontano Sans", sans-serif;
+}
+
+.about-text p {
+  margin: 0 0 1.85em;
+  font-size: clamp(15px, 1.15vw, 20px);
+  font-weight: 400;
+  line-height: 2.2;
+}
+
+.about-text p:last-child { margin-bottom: 0; }
+
+/* links in the bio: blue by default, brighter blue on hover */
+.about-text a,
+.about-text a:link,
+.about-text a:visited { color: #4470af; }
+
+.about-text a:hover,
+.about-text a:active,
+.about-text a:focus-visible { color: #2C3BCF; }
+
+.about-photo img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+@media (max-width: 900px) {
+  .about-page {
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 40px;
+    padding: 80px 6% 64px;
+  }
+
+  .about-text p { font-size: 16px; line-height: 1.9; }
+}
+
+
+/* --- About page: close button back to home (matches the case-study dock X) --- */
+.back-home {
+  position: fixed;
+  top: 16px;
+  left: 20px;
+  z-index: 90;
+  display: grid;
+  place-items: center;
+  width: var(--dock-close);
+  height: var(--dock-close);
+  border-radius: 50%;
+  background-color: #FE5656;
+  color: var(--dock-x);
+  transition: transform 0.3s ease;
+}
+
+.back-home svg {
+  width: var(--dock-glyph);
+  height: var(--dock-glyph);
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: butt;
+}
+
+.back-home:hover { transform: scale(1.08); color: var(--dock-x); }
+
+@media (prefers-reduced-motion: reduce) {
+  .back-home { transition: none; }
+}
+
+.back-home:focus-visible {
+  outline: 2px solid #5866F2;
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+
+/* --- Case studies: a slim header band so the top-right links sit on
+       white above the first image instead of over it --- */
+@media (max-width: 768px) {
+  :root { --case-header: 58px; }
+
+  .case-intro { padding-top: var(--case-header); }
+
+  .case-intro-card { height: 40vh; }
+}
+
+
+/* --- Case-study video card: the phone recording sits centred on the tint --- */
+.case-row-card.has-video video {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  display: block;
+  height: 88%;
+  width: auto;
+  max-width: 90%;
+  object-fit: contain;
+  border-radius: 28px;
+}
+
+@media (max-width: 768px) {
+  .case-row-card.has-video video { border-radius: 16px; }
+}
+
+
+/* --- Case-study image cards keep the artwork's own proportions ---
+   The images are designed as 1622 x 1338 cards (colour, padding and corners
+   are part of the artwork), so the card takes that shape instead of a fixed
+   height and nothing gets cropped. Width shrinks if needed to fit the screen. */
+.case-intro-card:has(> img),
+.case-row-card:has(> img) {
+  height: auto;
+  min-height: 0;
+  aspect-ratio: var(--card-ratio);
+  width: 100%;
+  justify-self: start;
+}
+
+.case-intro-card:has(> img) {
+  max-width: calc((100vh - var(--case-header) - 8vh) * var(--card-ratio-n));
+}
+
+.case-row-card:has(> img) {
+  max-width: calc(88vh * var(--card-ratio-n));
+}
+
+.case-intro-card:has(> img) img,
+.case-row-card:has(> img) img {
+  object-fit: contain;
+}
+
+@media (max-width: 768px) {
+  .case-intro-card:has(> img),
+  .case-row-card:has(> img) {
+    height: auto;
+    max-width: none;
+  }
+}
+
+
+/* --- Password gate (case studies one and two) ---
+   Same parts as the rest of the site: Pontano Sans, grey #999 labels,
+   the light-grey dock pill, the dark dock dot and the red close X. */
+html.pw-locked { overflow: hidden; scroll-snap-type: none; }
+html.pw-locked body > *:not(.pw-gate) { visibility: hidden; }
+
+.pw-gate {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: grid;
+  place-items: center;
+  padding: 24px 16px;
+  background: #fff;
+  font-family: "Pontano Sans", sans-serif;
+}
+
+.pw-form {
+  display: grid;
+  gap: 14px;
+  justify-items: center;
+}
+
+.pw-form label { font-size: 17px; color: #999; }
+
+.pw-field {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: min(300px, 80vw);
+  padding: 6px 6px 6px 20px;
+  border-radius: 999px;
+  background: var(--dock-idle, #e9e9e9);
+}
+
+.pw-field input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  font: inherit;
+  font-size: 17px;
+  color: #111;
+  outline: none;
+}
+
+.pw-field input::placeholder { color: #999; }
+
+.pw-field button {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--dock-ink, #282827);
+  color: #fff;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.pw-field button:hover { transform: scale(1.08); }
+
+@media (prefers-reduced-motion: reduce) {
+  .pw-field button { transition: none; }
+}
+
+.pw-field button svg {
+  width: 12px;
+  height: 12px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.pw-field button:focus-visible { outline: 2px solid #5866F2; outline-offset: 2px; }
+
+.pw-form.is-wrong .pw-field { animation: pw-shake 0.35s ease; background: #ffe3e3; }
+
+@keyframes pw-shake {
+  25% { transform: translateX(-6px); }
+  50% { transform: translateX(6px); }
+  75% { transform: translateX(-3px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pw-form.is-wrong .pw-field { animation: none; }
+}
+
+
+/* --- Home intro on phones ---
+   The intro's line breaks are written into the HTML. Type, side padding
+   and the "How Might We" dots scale with the screen width so the longest
+   line always fits; capped so tablets don't get oversized text. */
+
+
+@media (max-width: 768px) {
+.text-wrap-lock { width: 100%; }
+
+  .left-col {
+    padding-left: min(6.154vw, 29.54px);
+    padding-right: min(6.154vw, 29.54px);
+  }
+
+  .left-col h1,
+  .left-col .pontano-sans-custom,
+  .left-col .completion-text {
+    font-size: min(6.9vw, 33.1px);
+  }
+
+  .HMW .dot {
+    width: min(1.88vw, 9px);
+    height: min(1.88vw, 9px);
+    margin-top: 0;            /* sit on the baseline so the line never changes height */
+    vertical-align: baseline;
+  }
+
+  .HMW .dot:not(.period-dot) { margin-left: min(1.17vw, 5.6px); }
+  .HMW .period-dot { margin-left: min(0.47vw, 2.25px); }
+}
+
+
+/* --- Case study three: playable Past / Present / Future soundscape card ---
+   Same shape as the image cards; everything inside scales with the card
+   width (container units) so the buttons sit where they did in the image. */
+.case-row-card.sound-card {
+  height: auto;
+  min-height: 0;
+  aspect-ratio: var(--card-ratio);
+  width: 100%;
+  max-width: calc(88vh * var(--card-ratio-n));
+  justify-self: start;
+  container-type: inline-size;
+  background-color: rgb(225, 225, 225);
+  transition: background-color 1s ease;
+  display: grid;
+  place-items: center;
+  font-family: "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+@media (max-width: 768px) {
+  .case-row-card.sound-card { max-width: none; }
+}
+
+.sound-buttons {
+  display: flex;
+  gap: 1.5em;
+  font-size: 3.04cqw;
+}
+
+.sound-btn {
+  all: unset;
+  cursor: pointer;
+  position: relative;
+  border-radius: 999vw;
+  background-color: rgba(0, 0, 0, 0.75);
+  box-shadow: -0.15em -0.15em 0.15em -0.075em rgba(5, 5, 5, 0.25),
+    0.0375em 0.0375em 0.0675em 0 rgba(5, 5, 5, 0.1);
+  transition: transform 250ms ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.sound-btn .button-outer {
+  display: block;
+  position: relative;
+  border-radius: inherit;
+  transition: box-shadow 300ms ease;
+  box-shadow: 0 0.05em 0.05em -0.01em rgba(5, 5, 5, 1),
+    0 0.01em 0.01em -0.01em rgba(5, 5, 5, 0.5),
+    0.15em 0.3em 0.1em -0.01em rgba(5, 5, 5, 0.25);
+}
+
+.sound-btn:hover .button-outer { box-shadow: none; }
+
+.sound-btn .button-inner {
+  display: block;
+  padding: 1em 1.5em;
+  border-radius: inherit;
+  background-image: linear-gradient(135deg, rgba(230, 230, 230, 1), rgba(180, 180, 180, 1));
+  box-shadow:
+    0 0 0 0 inset rgba(5, 5, 5, 0.1),
+    -0.05em -0.05em 0.05em 0 inset rgba(5, 5, 5, 0.25),
+    0.25em 0.25em 0.2em 0 inset rgba(5, 5, 5, 0.5),
+    0 0 0.05em 0.5em inset rgba(255, 255, 255, 0.15);
+  transition: transform 200ms ease;
+}
+
+.sound-btn .button-label {
+  display: block;
+  font-weight: 500;
+  line-height: 1.2;
+  background-image: linear-gradient(135deg, rgba(25, 25, 25, 1), rgba(75, 75, 75, 1));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: rgba(0, 0, 0, 0);
+}
+
+.sound-btn:active .button-inner,
+.sound-btn.active .button-inner { transform: scale(0.95); }
+
+.sound-btn:focus-visible { outline: 2px solid #5866F2; outline-offset: 0.35em; }
+
+/* mute / unmute, bottom right of the card */
+.sound-mute {
+  all: unset;
+  position: absolute;
+  right: 3.2cqw;
+  bottom: 3.2cqw;
+  display: grid;
+  place-items: center;
+  width: max(32px, 4.6cqw);
+  height: max(32px, 4.6cqw);
+  border-radius: 50%;
+  color: #3a3a3a;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.sound-mute:hover { background-color: rgba(0, 0, 0, 0.07); color: #111; }
+.sound-mute:focus-visible { outline: 2px solid #5866F2; outline-offset: 2px; }
+
+.sound-mute svg {
+  width: 62%;
+  height: 62%;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.sound-mute svg path:first-child { fill: currentColor; }
+.sound-mute .icon-off { display: none; }
+.sound-mute.is-muted .icon-on { display: none; }
+.sound-mute.is-muted .icon-off { display: block; }
+
+@media (prefers-reduced-motion: reduce) {
+  .sound-btn, .sound-btn .button-inner, .sound-btn .button-outer { transition: none; }
+}
+
+
+/* Soundscape card: drifting shapes behind the buttons while a track plays */
+.sound-card[data-mode="past"]    { background-color: rgba(196, 164, 132, 0.7); }
+.sound-card[data-mode="present"] { background-color: rgba(135, 206, 235, 0.7); }
+.sound-card[data-mode="future"]  { background-color: rgba(225, 225, 255, 0); }
+
+.sound-sky {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.sound-card .sound-buttons,
+.sound-card .sound-mute { z-index: 1; }
+
+@media (prefers-reduced-motion: reduce) {
+  .case-row-card.sound-card { transition: none; }
+}
+
+
+/* --- Case study one cover: UGen sensors over the bottom-left of the card --- */
+#case-study-one .card-sensors {
+  left: -7.92vh;
+  top: 41.6%;
+  height: 70.2%;
+  border-radius: 0;
+  z-index: 1;
+}
+
+@media (max-width: 768px) {
+  #case-study-one .card-sensors { left: -9.9%; }
+}
+
+
+/* Home intro: the line breaks are written into the HTML, so the browser
+   never adds its own (stops "human-centered" splitting at the hyphen). */
+.text-wrap-lock .intro-fade { white-space: nowrap; }
+
+
+/* --- Case studies on phones: a little more air between each image and
+       its text, and between one section and the next. Image containers
+       are square-cornered here (the images no longer have corners baked in;
+       desktop rounds them with the card's own border-radius). --- */
+@media (max-width: 768px) {
+  .case-intro { padding-bottom: 72px; }
+  .case-intro-text { padding-top: 36px; }
+  .case-row { padding-bottom: 80px; }
+  .case-row-text { padding-top: 32px; }
+  .case-intro-card,
+  .case-row-card { border-radius: 0; }
+}
+
+
+/* --- Home page on phones: each project card stops just under the
+       Resume / LinkedIn / About links instead of sliding up behind them.
+       Snapping to the card's top (not its centre) keeps the gap fixed even
+       when mobile browser toolbars change the screen height. --- */
+@media (max-width: 768px) {
+  html { scroll-padding-top: 0; }
+
+  /* snap the card itself (it fits on screen, so the snap is exact) */
+  .right-col-grid > .sub-row:not(:first-child) { scroll-snap-align: none; }
+
+  .right-col-grid > .sub-row > a {
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+    scroll-margin-top: 56px;    /* nav ends ~36px down, plus 20px of room */
+  }
+}
+
+
+/* --- Home page on phones: the intro, headline and year/description move as
+       one block (keeps their spacing identical in every browser). --- */
+@media (max-width: 768px) {
+  .text-wrap-lock { transform: translateY(60%); }   /* fallback; home-mobile.js sets the exact spot */
+}
+
+
+/* Home page on phones: the text block hangs from the top instead of being
+   centred, so when a project's year and description appear below
+   "How Might We" nothing above them shifts. (home-mobile.js sets the spot.) */
+@media (max-width: 768px) {
+  .left-col { justify-content: flex-start; }
+}
+
+
+/* --- Wide (desktop) screen recordings: full width of the card, centred,
+       square corners --- */
+.case-row-card.has-video.is-wide video {
+  width: 92%;
+  height: auto;
+  max-width: 92%;
+  max-height: 88%;
+  border-radius: 0;
+}
+
+@media (max-width: 768px) {
+  .case-row-card.has-video.is-wide { height: auto; aspect-ratio: var(--card-ratio); }
+  .case-row-card.has-video.is-wide video { border-radius: 0; }
+}
+
+
+/* --- Home cards: on hover a soft gradient in the card's own colour rises up the card ---
+   Stops: card colour at 0% opacity (0%), 37% (25%), 100% (100%), top to bottom,
+   shown at 55% strength so it stays subtle. It starts low and slides up into
+   place as it fades in, and the card's artwork eases up a few pixels.
+   Only on devices with a real hover (not on phones). */
+.case-study::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;                     /* above the card images and sensors */
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    rgb(var(--card-rgb) / 0) 0%,
+    rgb(var(--card-rgb) / 0.37) 25%,
+    rgb(var(--card-rgb) / 1) 100%
+  );
+  opacity: 0;
+  transform: translateY(35%);
+  transition: opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* each card's background colour, as R G B, for its hover gradient,
+   is set as --card-rgb on .case-study / #case-study-* near the top of the file */
+
+.case-study .card-img {
+  transition: translate 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (hover: hover) {
+  .sub-row > a:hover .case-study::after,
+  .sub-row > a:focus-visible .case-study::after {
+    opacity: 0.55;
+    transform: translateY(0);
+  }
+
+  .sub-row > a:hover .case-study .card-img,
+  .sub-row > a:focus-visible .case-study .card-img {
+    translate: 0 -6px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .case-study::after { transition: opacity 0.2s linear; transform: none; }
+  .case-study .card-img { transition: none; }
+  .sub-row > a:hover .case-study .card-img,
+  .sub-row > a:focus-visible .case-study .card-img { translate: none; }
+}
+
+
+/* --- Home page, medium screens (tablets / small laptops) ---
+   The headline column gets narrower and its type scales with the screen,
+   so "How Might We…" wraps before the project dots and cards instead of
+   running underneath them. */
+@media (min-width: 769px) and (max-width: 1439px) {
+  .text-wrap-lock {
+    width: 38vw;
+    min-width: 0;
+    max-width: 38vw;
+  }
+
+  .left-col h1,
+  .left-col .pontano-sans-custom,
+  .left-col .completion-text {
+    font-size: min(44px, 2.75vw);
+  }
+
+  .case-meta { max-width: 100%; }
+
+  /* the "How Might We" dots (and the space they hold above the line) scale
+     with the type, so the gap under the intro sentence shrinks with it */
+  .HMW .dot {
+    width: 0.5vw;
+    height: 0.5vw;
+    margin-top: 1.875vw;
+    margin-left: 0.3125vw;
+  }
+
+  .HMW .period-dot { margin-left: 0.125vw; }
+}
+
+
+
+/* --- "View" pill on the home cards ---
+   Decorative label (the whole card is already the link), one inside each
+   card's <a>, as a sibling of .case-study (which clips its contents).
+   It is chosen by how the visitor points, not by screen width:
+   - mouse / trackpad (hover + fine pointer): follows the cursor while it is
+     over a card, at any window width (js/view-cursor.js sets --view-x/-y)
+   - touch (everything else): always visible, 12px under the card, moves
+     with it, and is tappable as part of the card's link */
+/* "View" button: ink pill, white label, 29px tall. */
+.view-pill {
+  align-items: center;
+  justify-content: center;
+  height: 29px;
+  padding: 0 13px;
+  box-sizing: border-box;
+  background-color: var(--dock-ink, #282827);
+  color: #ffffff;
+  border-radius: 100px;
+  font-family: "Pontano Sans", sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.view-pill {
+  display: none;
+  user-select: none;
+}
+
+/* Label: "View" on touch screens, "View Case Study" next to the cursor */
+.view-pill .view-long { display: none; }
+@media (hover: hover) and (pointer: fine) {
+  .view-pill .view-long { display: inline; }
+  .view-pill .view-short { display: none; }
+}
+
+/* Touch: under the card, centred on it, travelling with it, tappable */
+@media (hover: none), (pointer: coarse) {
+  .sub-row > a { position: relative; }
+
+  .view-pill {
+    display: inline-flex;
+    position: absolute;
+    top: calc(100% + 12px);
+    /* centred on the part of the card that is on screen; js/view-cursor.js
+       sets --pill-shift when part of the card runs off the edge */
+    left: calc(50% + var(--pill-shift, 0px));
+    translate: -50% 0;       /* same stacking level as the card it hangs from */
+  }
+}
+
+/* Phones: beside the card instead, centred in the space to its left and
+   on the card's height (js/view-cursor.js sets data-pill="side" when that
+   space is wide enough, and --pill-shift to centre it there). */
+@media (hover: none), (pointer: coarse) {
+  .sub-row > a[data-pill="side"] .view-pill {
+    top: 50%;
+    translate: -50% -50%;
+  }
+}
+
+/* Touch screens that use the wide (desktop) layout, e.g. tablets: the link
+   becomes a block as tall as its row, so "100%" is the bottom of the card. */
+@media (hover: none) and (min-width: 769px), (pointer: coarse) and (min-width: 769px) {
+  .sub-row > a {
+    display: block;
+    height: 100%;
+  }
+}
+
+/* Mouse / trackpad, at any window width: next to the cursor over a card */
+@media (hover: hover) and (pointer: fine) {
+  .view-pill {
+    display: inline-flex;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 30;
+    translate: var(--view-x, 0px) var(--view-y, 0px);
+    opacity: 0;
+    scale: 0.92;
+    pointer-events: none;    /* never gets between the cursor and the card */
+    transition: opacity 0.2s ease, scale 0.2s cubic-bezier(0.22, 1, 0.36, 1),
+                background-color 0.12s ease;
+  }
+
+  /* shown: the ink eases to 90% opacity (the label stays solid) */
+  .view-pill.is-visible {
+    opacity: 1;
+    scale: 1;
+    background-color: rgb(40 40 39 / 0.9);                                  /* fallback */
+    background-color: color-mix(in srgb, var(--dock-ink, #282827) 90%, transparent);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .view-pill { transition: none; scale: 1; }
+}
+
+
+/* --- Page dock jumps (js/dock.js) ---
+   While a tapped dot glides the page to its chapter, snapping is switched
+   off so the two can't fight (the page used to stop at the wrong chapter or
+   rubber-band on phones). dock.js removes the class at the reader's next
+   touch, scroll or key press, not when the glide stops. */
+html.dock-jump { scroll-snap-type: none; }
+
+/* On phones the first chapter is taller than the visible screen, so its
+   centre isn't a reliable snap point. Snap it by its top edge, which makes
+   the very top of the page the place a case study always opens at. */
+@media (max-width: 768px) {
+  .case-intro { scroll-snap-align: start; }
+}
+
+
+/* --- Top-right "About" link as a pill (same look as the touch "View" pill,
+       without the icon). The nav centres its items on the pill, and moves up
+       by half the extra height so the other links stay where they were. --- */
+.global-nav {
+  align-items: center;
+  top: 14.5px;                   /* was 20px: 20 - (29 - 18) / 2 */
+}
+
+@media (max-width: 768px) {
+  .global-nav { top: 10px; }     /* was 16px: 16 - (29 - 17) / 2 */
+}
+
+.global-nav a.nav-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 29px;                  /* same size and padding as "View Case Study" */
+  padding: 0 13px;
+  font-size: 14px;
+  line-height: 1;
+  box-sizing: border-box;
+  border-radius: 100px;
+  background-color: var(--dock-idle, #e9e9e9);
+  color: var(--dock-ink, #282827);
+  transition: background-color 0.2s ease;
+  -webkit-tap-highlight-color: transparent;   /* no grey square flash on tap (iOS) */
+}
+
+/* hover: the grey deepens slightly (mouse only, so it can't stick after a tap) */
+@media (hover: hover) {
+  .global-nav a.nav-pill:hover {
+    background-color: #dcdcdc;
+    color: var(--dock-ink, #282827);
+  }
+}
+
+/* pressed, on any device */
+.global-nav a.nav-pill:active {
+  background-color: #dcdcdc;
+  color: var(--dock-ink, #282827);
+}
+
+.global-nav a.nav-pill:focus-visible {
+  outline: 2px solid #5866F2;
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .global-nav a.nav-pill { transition: none; }
+}

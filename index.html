@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head> 
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"> 
+  <title>Jacob's Portfolio</title> 
+  <link rel="stylesheet" href="css/style.css?v=13"> 
+  <link rel="preconnect" href="https://fonts.googleapis.com"> 
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> 
+  <link href="https://fonts.googleapis.com/css2?family=Pontano+Sans:wght@300..700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="/images/favicon/favicon.svg"> 
+  <script type="speculationrules">
+  {"prerender": [{"where": {"selector_matches": "a[href='case-study-one.html']"}, "eagerness": "moderate"}], "prefetch": [{"where": {"selector_matches": "a[href^='case-study-']:not([href='case-study-one.html'])"}, "eagerness": "moderate"}]}
+  </script>
+</head> 
+<body>
+  <nav class="global-nav" aria-label="Site">
+    <a href="Jacob-Nicholson-Resume.pdf" target="_blank" rel="noopener">Resume</a>
+    <a href="https://www.linkedin.com/in/jacob-nicholson-design/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+    <a href="https://github.com/jacob-nicholson" target="_blank" rel="noopener noreferrer">Github</a>
+    <a class="nav-pill" href="about.html">About</a>
+  </nav>
+ 
+
+  <!-- Page dock: project dots; the current project opens into its chapter dots -->
+  <nav class="page-dock is-hidden" aria-label="Projects">
+    <div class="dock-group"><a class="dock-parent is-active" href="#case-study-one" aria-label="Carefully guide recovery" title="Carefully guide recovery"></a></div>
+    <div class="dock-group"><a class="dock-parent" href="#case-study-two" aria-label="Notify healthcare professionals" title="Notify healthcare professionals"></a></div>
+    <div class="dock-group"><a class="dock-parent" href="#case-study-three" aria-label="Explore resonance" title="Explore resonance"></a></div>
+    <div class="dock-group"><a class="dock-parent" href="#case-study-four" aria-label="Facilitate collaboration" title="Facilitate collaboration"></a></div>
+  </nav> 
+  
+  <!-- Start-screen scroll cue (fades out with the intro text); click to jump to the first project -->
+  <button class="scroll-arrow" type="button" aria-label="Scroll to the first project"><img src="images/home/down-arrow.png" alt=""></button>
+
+  <div class="main-grid"> 
+    <div class="left-col"> 
+        <div class="text-wrap-lock">
+          <h1 class="intro-fade">I’m Jacob, a human-centered<br> designer &amp; systems thinker<br> who likes to ask the question<br></h1> 
+          <div class="HMW">
+            <h1 class="pontano-sans-custom">How Might We </h1>
+            <span class="dot period-dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <!-- The Target Container -->
+            <span class="completion-text"></span>
+          </div>
+          <div class="case-meta">
+            <span class="case-year"></span>
+            <p class="case-description"></p>
+          </div>
+        </div>
+      </div>
+    <div class="right-col-grid"> 
+      <div class="sub-row"> 
+        <div class="fixed-hero-wrapper"></div>
+      </div>
+      <div class="sub-row">
+        <a href="case-study-one.html"><div class="case-study" id="case-study-one"><img class="card-img" src="images/home/card-one.png" alt="UGen exercise screen showing rep count and range of motion"><img class="card-img card-sensors" src="images/home/card-one-sensors.webp" alt="Two UGen motion sensors"></div><span class="view-pill" aria-hidden="true"><span class="view-long">View Case Study</span><span class="view-short">View</span></span></a>
+      </div> 
+      <div class="sub-row">
+        <a href="case-study-two.html"><div class="case-study" id="case-study-two"><img class="card-img" src="images/home/card-two.png" alt="Therapist portal showing notifications and patient adherence"></div><span class="view-pill" aria-hidden="true"><span class="view-long">View Case Study</span><span class="view-short">View</span></span></a>
+      </div> 
+      <div class="sub-row">
+        <a href="case-study-three.html"><div class="case-study" id="case-study-three"><img class="card-img" src="images/home/card-three.png" alt="Cardboard model of The Pickrick storefront with two figures"></div><span class="view-pill" aria-hidden="true"><span class="view-long">View Case Study</span><span class="view-short">View</span></span></a>
+      </div> 
+      <div class="sub-row">
+        <a href="case-study-four.html"><div class="case-study" id="case-study-four"><img class="card-img" src="images/home/card-four.png" alt="Collaboration lobby showing six players and a ready button"></div><span class="view-pill" aria-hidden="true"><span class="view-long">View Case Study</span><span class="view-short">View</span></span></a>
+      </div>
+    </div> 
+  </div>
+
+<!-- FINAL JAVASCRIPT: Handles smooth synchronized fades, scroll waves, text completions, and bottom side-dot navigation slides -->
+<script>
+    /* ==========================================================================
+       1. ELEMENT REFERENCES
+       ========================================================================== */
+
+    const dots = document.querySelectorAll('.dot');
+    const introText = document.querySelector('.intro-fade');
+    const heroWrapper = document.querySelector('.fixed-hero-wrapper');
+    const scrollArrow = document.querySelector('.scroll-arrow');
+    const hmwHeading = document.querySelector('.HMW .pontano-sans-custom');
+
+    const caseStudies = document.querySelectorAll('.case-study');
+    const sideDots = document.querySelectorAll('.dock-parent');
+    const dotsNavContainer = document.querySelector('.page-dock');
+
+    const caseMeta = document.querySelector('.case-meta');
+    const caseYear = document.querySelector('.case-year');
+    const caseDescription = document.querySelector('.case-description');
+
+
+    /* ==========================================================================
+       2. COMPLETION SENTENCES
+       ========================================================================== */
+
+    let completionText = document.querySelector('.completion-text');
+
+    if (!completionText) {
+      completionText = document.createElement('span');
+      completionText.className = 'completion-text';
+      hmwHeading.appendChild(completionText);
+    }
+
+    const sentences = {
+      0: " Carefully Guide Recovery?",
+      1: " Notify Healthcare Professionals?",
+      2: " Explore Resonance?",
+      3: " Facilitate Collaboration?"
+    };
+
+
+    /* ==========================================================================
+       3. CASE STUDY METADATA
+       ========================================================================== */
+
+    const caseData = {
+      0: {
+        year: "2026",
+        description: "Rethinking the relationship between robotics, information and movement"
+      },
+
+      1: {
+        year: "2026",
+        description: "Building a flexible attention system with real-world stakes"
+      },
+
+      2: {
+        year: "2025",
+        description: "An immersive exhibit & soundscape exploring how ideas resonate in time"
+      },
+      3: {
+        year: "2025",
+        description: "A concept mobile application solving a problem in my own life"
+      }
+    };
+
+
+    /* ==========================================================================
+       4. SCROLL PHYSICS
+       Handles:
+       - Intro fade
+       - Hero fade
+       - Dancing dots
+       - Hiding dots while sentence is visible
+       - Sidebar reset when returning home
+       ========================================================================== */
+
+    window.addEventListener('scroll', () => {
+
+      const scrollTop = window.scrollY;
+
+
+      /* --------------------------------------------------------------------------
+         INTRO + HERO FADE
+         -------------------------------------------------------------------------- */
+
+      let fadeProgress = 1 - (scrollTop / 300);
+
+      if (fadeProgress < 0) fadeProgress = 0;
+      if (fadeProgress > 1) fadeProgress = 1;
+
+      introText.style.opacity = fadeProgress;
+      heroWrapper.style.opacity = fadeProgress;
+      scrollArrow.style.opacity = fadeProgress;
+
+
+      /* --------------------------------------------------------------------------
+         HERO POINTER EVENTS
+         -------------------------------------------------------------------------- */
+
+      if (fadeProgress === 0) {
+        heroWrapper.style.pointerEvents = 'none';
+        scrollArrow.style.pointerEvents = 'none';
+        scrollArrow.tabIndex = -1;
+      } else {
+        heroWrapper.style.pointerEvents = 'auto';
+        scrollArrow.style.pointerEvents = '';
+        scrollArrow.tabIndex = 0;
+      }
+
+
+      /* --------------------------------------------------------------------------
+         SENTENCE / DOT INTERACTION
+         -------------------------------------------------------------------------- */
+
+      const isShowingSentence =
+        hmwHeading.classList.contains('has-text');
+
+
+      dots.forEach((dot, index) => {
+
+        if (scrollTop > 40) {
+
+          /* ----------------------------------------------------------------------
+             SENTENCE IS VISIBLE
+
+             Hide every dot so the sentence can flow directly after
+             "How Might We"
+             ---------------------------------------------------------------------- */
+
+          if (isShowingSentence) {
+
+            dot.style.display = 'none';
+
+          }
+
+          /* ----------------------------------------------------------------------
+             NO SENTENCE
+
+             Bring the dancing dots back.
+             ---------------------------------------------------------------------- */
+
+          else {
+
+            dot.style.display = 'inline-block';
+            dot.style.opacity = '1';
+
+            const waveValue =
+              Math.sin((scrollTop * 0.005) - (index * 1.2));
+
+            const bounceY =
+              (waveValue + 1) * -6;
+
+            dot.style.transform =
+              `translateY(${bounceY}px)`;
+          }
+
+        }
+
+        /* ------------------------------------------------------------------------
+           TOP OF PAGE
+
+           Only the period dot remains visible.
+           ------------------------------------------------------------------------ */
+
+        else {
+
+          dot.style.display = 'inline-block';
+
+          if (index === 0) {
+
+            dot.style.opacity = '1';
+            dot.style.transform = 'translateY(0)';
+
+          }
+
+          else {
+
+            dot.style.opacity = '0';
+            dot.style.transform = 'translateY(0)';
+          }
+        }
+      });
+
+
+      /* ==========================================================================
+         AUTO-HIDE SIDEBAR WHEN RETURNING TO TOP
+         ========================================================================== */
+
+      if (scrollTop < 100) {
+
+        dotsNavContainer.classList.add('is-hidden');
+
+        sideDots.forEach(dot => {
+          dot.classList.remove('is-active');
+        });
+      }
+
+    });
+
+
+    /* ==========================================================================
+       5. INTERSECTION OBSERVER
+       Handles:
+       - Sentence changes
+       - Case year
+       - Case description
+       - Sidebar visibility
+       - Active sidebar dot
+       ========================================================================== */
+
+    const observerOptions = {
+
+      root: null,
+
+      rootMargin: "-30% 0px -30% 0px",
+
+      threshold: 0.1
+
+    };
+
+
+    const observer = new IntersectionObserver((entries) => {
+
+      entries.forEach(entry => {
+
+        const studyIndex =
+          Array.from(caseStudies).indexOf(entry.target);
+
+
+        /* ========================================================================
+           CASE STUDY ENTERS VIEW
+           ======================================================================== */
+
+        if (entry.isIntersecting) {
+
+
+          /* ----------------------------------------------------------------------
+             SENTENCE
+             ---------------------------------------------------------------------- */
+
+          if (sentences[studyIndex]) {
+
+            hmwHeading.classList.add('has-text');
+
+            completionText.textContent =
+              sentences[studyIndex];
+
+            completionText.classList.add('active');
+          }
+
+
+          /* ----------------------------------------------------------------------
+             CASE YEAR + DESCRIPTION
+             ---------------------------------------------------------------------- */
+
+          if (caseData[studyIndex]) {
+
+            caseYear.textContent =
+              caseData[studyIndex].year;
+
+            caseDescription.textContent =
+              caseData[studyIndex].description;
+
+            caseMeta.classList.add('active');
+          }
+
+
+          /* ----------------------------------------------------------------------
+             SIDEBAR
+
+             Only trigger the sidebar visibility when entering
+             the first case study.
+             ---------------------------------------------------------------------- */
+
+          dotsNavContainer.classList.remove('is-hidden');
+
+
+          /* ----------------------------------------------------------------------
+             SIDEBAR ACTIVE DOT
+             ---------------------------------------------------------------------- */
+
+          sideDots.forEach(dot => {
+            dot.classList.remove('is-active');
+          });
+
+
+          if (sideDots[studyIndex]) {
+
+            sideDots[studyIndex].classList.add('is-active');
+          }
+
+
+          /* ----------------------------------------------------------------------
+             FORCE SCROLL UPDATE
+
+             This immediately hides the dancing dots when the sentence appears.
+             ---------------------------------------------------------------------- */
+
+          window.dispatchEvent(new Event('scroll'));
+
+        }
+
+
+        /* ========================================================================
+           CASE STUDY LEAVES VIEW
+
+           SENTENCE REMOVAL: only clear the sentence if it still belongs to
+           this case study.
+
+           SIDEBAR FALLBACKS: your existing scroll tracker handles the home reset.
+           ======================================================================== */
+
+        else if (
+          completionText.textContent ===
+          sentences[studyIndex]
+        ) {
+
+          hmwHeading.classList.remove('has-text');
+
+          completionText.classList.remove('active');
+
+
+          /* ----------------------------------------------------------------------
+             CASE METADATA REMOVAL
+             ---------------------------------------------------------------------- */
+
+          caseMeta.classList.remove('active');
+
+
+          /* ----------------------------------------------------------------------
+             CLEAR TEXT AFTER TRANSITION
+             ---------------------------------------------------------------------- */
+
+          setTimeout(() => {
+
+            if (!completionText.classList.contains('active')) {
+
+              completionText.textContent = "";
+
+              caseYear.textContent = "";
+
+              caseDescription.textContent = "";
+            }
+
+          }, 200);
+
+
+          /* ----------------------------------------------------------------------
+             FORCE DOT UPDATE
+             ---------------------------------------------------------------------- */
+
+          window.dispatchEvent(new Event('scroll'));
+        }
+
+      });
+
+    }, observerOptions);
+
+
+    /* ==========================================================================
+       6. START OBSERVING CASE STUDIES
+       ========================================================================== */
+
+    caseStudies.forEach(study => {
+
+      observer.observe(study);
+
+    });
+
+
+    /* ==========================================================================
+       6b. DOWN ARROW: glide to the first "How Might We" + project card
+           (centred on desktop, just under the top links on phones — the same
+           spots the page snaps to)
+       ========================================================================== */
+
+    scrollArrow.addEventListener('click', () => {
+      const first = document.querySelector('a[href="case-study-one.html"]');
+      if (!first) return;
+      const phone = window.matchMedia('(max-width: 768px)').matches;
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      first.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: phone ? 'start' : 'center' });
+    });
+
+
+    /* ==========================================================================
+       7. INITIAL STATE
+       ========================================================================== */
+
+    // Make sure the sidebar starts hidden.
+    dotsNavContainer.classList.add('is-hidden');
+
+    // Make sure metadata starts hidden.
+    caseMeta.classList.remove('active');
+
+    // Make sure completion text starts hidden.
+    completionText.classList.remove('active');
+
+    // Run the initial scroll state once.
+    window.dispatchEvent(new Event('scroll'));
+
+</script>
+
+  <script src="js/dock.js?v=13" defer></script>
+  <script src="js/home-mobile.js?v=13" defer></script>
+  <script src="js/home-end.js?v=13" defer></script>
+  <script src="js/view-cursor.js?v=13" defer></script>
+  <footer></footer>
+</body>
+</html>
