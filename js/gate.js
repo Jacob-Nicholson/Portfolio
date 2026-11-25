@@ -21,7 +21,7 @@
     var gate = document.createElement('div');
     gate.className = 'pw-gate';
     gate.innerHTML =
-      '<a class="back-home" href="index.html" aria-label="Back to home" title="Back to home">' +
+      '<a class="back-home" href="/index.html" aria-label="Back to home" title="Back to home">' +
         '<svg viewBox="0 0 10 10" aria-hidden="true"><path d="M.7 .7l8.6 8.6M9.3 .7L.7 9.3"/></svg></a>' +
       '<form class="pw-form" novalidate>' +
         '<label for="pw-input">Password protected</label>' +

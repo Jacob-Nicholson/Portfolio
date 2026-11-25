@@ -4,21 +4,21 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1"> 
   <title>Jacob's Portfolio</title> 
-  <link rel="stylesheet" href="css/style.css?v=13"> 
+  <link rel="stylesheet" href="/css/style.css?v=18"> 
   <link rel="preconnect" href="https://fonts.googleapis.com"> 
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> 
   <link href="https://fonts.googleapis.com/css2?family=Pontano+Sans:wght@300..700&display=swap" rel="stylesheet">
   <link rel="icon" type="image/png" href="/images/favicon/favicon.svg"> 
   <script type="speculationrules">
-  {"prerender": [{"where": {"selector_matches": "a[href='case-study-one.html']"}, "eagerness": "moderate"}], "prefetch": [{"where": {"selector_matches": "a[href^='case-study-']:not([href='case-study-one.html'])"}, "eagerness": "moderate"}]}
+  {"prerender": [{"where": {"selector_matches": "a[href='/case-study-one.html']"}, "eagerness": "moderate"}], "prefetch": [{"where": {"selector_matches": "a[href^='/case-study-']:not([href='/case-study-one.html'])"}, "eagerness": "moderate"}]}
   </script>
 </head> 
 <body>
   <nav class="global-nav" aria-label="Site">
-    <a href="Jacob-Nicholson-Resume.pdf" target="_blank" rel="noopener">Resume</a>
+    <a href="/Jacob-Nicholson-Resume.pdf" target="_blank" rel="noopener">Resume</a>
     <a href="https://www.linkedin.com/in/jacob-nicholson-design/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
     <a href="https://github.com/jacob-nicholson" target="_blank" rel="noopener noreferrer">Github</a>
-    <a class="nav-pill" href="about.html">About</a>
+    <a class="nav-pill" href="/about.html">About</a>
   </nav>
  
 
@@ -31,7 +31,7 @@
   </nav> 
   
   <!-- Start-screen scroll cue (fades out with the intro text); click to jump to the first project -->
-  <button class="scroll-arrow" type="button" aria-label="Scroll to the first project"><img src="images/home/down-arrow.png" alt=""></button>
+  <button class="scroll-arrow" type="button" aria-label="Scroll to the first project"><img src="/images/home/down-arrow.png" alt=""></button>
 
   <div class="main-grid"> 
     <div class="left-col"> 
@@ -56,19 +56,24 @@
         <div class="fixed-hero-wrapper"></div>
       </div>
       <div class="sub-row">
-        <a href="case-study-one.html"><div class="case-study" id="case-study-one"><img class="card-img" src="images/home/card-one.png" alt="UGen exercise screen showing rep count and range of motion"><img class="card-img card-sensors" src="images/home/card-one-sensors.webp" alt="Two UGen motion sensors"></div><span class="view-pill" aria-hidden="true"><span class="view-long">View Case Study</span><span class="view-short">View</span></span></a>
+        <a href="/case-study-one.html"><div class="case-study" id="case-study-one"><img class="card-img" src="/images/home/card-one.png" alt="UGen exercise screen showing rep count and range of motion"><img class="card-img card-sensors" src="/images/home/card-one-sensors.webp" alt="Two UGen motion sensors"></div><span class="view-pill" aria-hidden="true"><span class="view-long">View Case Study</span><span class="view-short">View</span></span></a>
       </div> 
       <div class="sub-row">
-        <a href="case-study-two.html"><div class="case-study" id="case-study-two"><img class="card-img" src="images/home/card-two.png" alt="Therapist portal showing notifications and patient adherence"></div><span class="view-pill" aria-hidden="true"><span class="view-long">View Case Study</span><span class="view-short">View</span></span></a>
+        <a href="/case-study-two.html"><div class="case-study" id="case-study-two"><img class="card-img" src="/images/home/card-two.png" alt="Therapist portal showing notifications and patient adherence"></div><span class="view-pill" aria-hidden="true"><span class="view-long">View Case Study</span><span class="view-short">View</span></span></a>
       </div> 
       <div class="sub-row">
-        <a href="case-study-three.html"><div class="case-study" id="case-study-three"><img class="card-img" src="images/home/card-three.png" alt="Cardboard model of The Pickrick storefront with two figures"></div><span class="view-pill" aria-hidden="true"><span class="view-long">View Case Study</span><span class="view-short">View</span></span></a>
+        <a href="/case-study-three.html"><div class="case-study" id="case-study-three"><img class="card-img" src="/images/home/card-three.png" alt="Cardboard model of The Pickrick storefront with two figures"></div><span class="view-pill" aria-hidden="true"><span class="view-long">View Case Study</span><span class="view-short">View</span></span></a>
       </div> 
       <div class="sub-row">
-        <a href="case-study-four.html"><div class="case-study" id="case-study-four"><img class="card-img" src="images/home/card-four.png" alt="Collaboration lobby showing six players and a ready button"></div><span class="view-pill" aria-hidden="true"><span class="view-long">View Case Study</span><span class="view-short">View</span></span></a>
+        <a href="/case-study-four.html"><div class="case-study" id="case-study-four"><img class="card-img" src="/images/home/card-four.png" alt="Collaboration lobby showing six players and a ready button"></div><span class="view-pill" aria-hidden="true"><span class="view-long">View Case Study</span><span class="view-short">View</span></span></a>
       </div>
     </div> 
   </div>
+
+  <!-- End of the home page: link to the undergrad archive (js/home-end.js) -->
+  <section class="home-more">
+    <a class="more-pill" href="/undergrad/">Other Stuff I’ve Made<svg viewBox="0 -960 960 960" aria-hidden="true"><path d="m560-240-56-58 142-142H160v-80h486L504-662l56-58 240 240-240 240Z"/></svg></a>
+  </section>
 
 <!-- FINAL JAVASCRIPT: Handles smooth synchronized fades, scroll waves, text completions, and bottom side-dot navigation slides -->
 <script>
@@ -385,7 +390,11 @@
 
         else if (
           completionText.textContent ===
-          sentences[studyIndex]
+          sentences[studyIndex] &&
+          // the last card leaving through the top means the visitor has moved
+          // on to "Other Stuff I've Made": keep its sentence, which rises with it
+          !(studyIndex === caseStudies.length - 1 &&
+            entry.boundingClientRect.top < (entry.rootBounds ? entry.rootBounds.top : 0))
         ) {
 
           hmwHeading.classList.remove('has-text');
@@ -448,7 +457,7 @@
        ========================================================================== */
 
     scrollArrow.addEventListener('click', () => {
-      const first = document.querySelector('a[href="case-study-one.html"]');
+      const first = document.querySelector('a[href="/case-study-one.html"]');
       if (!first) return;
       const phone = window.matchMedia('(max-width: 768px)').matches;
       const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -474,10 +483,10 @@
 
 </script>
 
-  <script src="js/dock.js?v=13" defer></script>
-  <script src="js/home-mobile.js?v=13" defer></script>
-  <script src="js/home-end.js?v=13" defer></script>
-  <script src="js/view-cursor.js?v=13" defer></script>
+  <script src="/js/dock.js?v=13" defer></script>
+  <script src="/js/home-mobile.js?v=15" defer></script>
+  <script src="/js/home-end.js?v=16" defer></script>
+  <script src="/js/view-cursor.js?v=13" defer></script>
   <footer></footer>
 </body>
 </html>

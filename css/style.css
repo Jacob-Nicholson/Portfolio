@@ -1697,3 +1697,334 @@ html.dock-jump { scroll-snap-type: none; }
 @media (prefers-reduced-motion: reduce) {
   .global-nav a.nav-pill { transition: none; }
 }
+
+
+/* ==========================================================================
+   UNDERGRAD ARCHIVE  (undergrad/*.html)
+   Older projects moved over from Adobe Portfolio. Each page keeps the
+   original order of text, images, side-by-side rows and galleries; module
+   widths come from the old layout through an inline --w on each block.
+   ========================================================================== */
+
+.ug-page {
+  box-sizing: border-box;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 128px 6vw 40px;
+  color: #111;
+  font-family: "Pontano Sans", sans-serif;
+}
+
+.ug-intro { margin-bottom: 80px; }
+
+.ug-kicker {
+  margin: 0 0 14px;
+  font-size: 14px;
+  color: #999;
+}
+
+.ug-kicker a,
+.ug-kicker a:link,
+.ug-kicker a:visited { font-weight: 400; color: #999; }
+
+.ug-kicker a:hover,
+.ug-kicker a:active { color: #111; }
+
+.ug-intro h1 {
+  margin: 0;
+  font-weight: 400;
+  line-height: 1.2;
+}
+
+.ug-intro .ug-summary {
+  margin-top: 28px;
+  font-size: 17px;
+  line-height: 1.75;
+}
+
+.ug-modules {
+  display: flex;
+  flex-direction: column;
+  gap: 64px;
+}
+
+.ug-text,
+.ug-image,
+.ug-grid {
+  width: var(--w, 100%);
+  margin-inline: auto;
+}
+
+.ug-text { margin-inline: 0; }            /* text lines up with the title */
+.ug-text .section-body { font-size: 17px; line-height: 1.75; }
+.ug-text .section-body + .section-body { margin-top: 1.2em; }
+.ug-text + * { margin-top: -36px; }       /* captions sit close to their images */
+
+.ug-text a { color: #4470af; }
+.ug-text a:hover { color: #2C3BCF; }
+
+.ug-image.is-left,
+.ug-grid.is-left { margin-left: 0; }
+
+.ug-image img,
+.ug-cell img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 14px;
+}
+
+/* side-by-side images (old "tree" modules) */
+.ug-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.ug-col { min-width: 0; }
+.ug-col > * + * { margin-top: 16px; }
+
+/* justified galleries (old "media collection" modules) */
+.ug-grid-row {
+  display: flex;
+  gap: 12px;
+}
+
+.ug-grid-row + .ug-grid-row { margin-top: 12px; }
+
+.ug-cell { flex: 1 1 0; min-width: 0; }
+.ug-grid-row.is-loose { justify-content: center; }
+.ug-grid-row.is-loose .ug-cell { flex-grow: 0; flex-shrink: 0; }
+
+.ug-embed {
+  width: 100%;
+  margin-inline: auto;
+  overflow: hidden;
+  border-radius: 14px;
+  background-color: #f4f4f4;
+}
+
+.ug-embed iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.ug-button {
+  margin: 0;
+  text-align: center;
+}
+
+.ug-button a,
+.ug-button a:link,
+.ug-button a:visited {
+  display: inline-block;
+  padding: 12px 26px;
+  border-radius: 999px;
+  background-color: var(--case-accent);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 400;
+  transition: transform 0.3s ease;
+}
+
+.ug-button a:hover { color: #fff; transform: scale(1.05); }
+
+@media (prefers-reduced-motion: reduce) {
+  .ug-button a { transition: none; }
+}
+
+.ug-button a:focus-visible { outline: 2px solid #5866F2; outline-offset: 3px; }
+
+/* --- archive index: two columns of project cards --- */
+.ug-index {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 56px 32px;
+}
+
+.ug-card,
+.ug-card:link,
+.ug-card:visited {
+  display: block;
+  font-weight: 400;
+  color: #111;
+}
+
+.ug-card-img {
+  display: block;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-radius: 14px;
+  background-color: #f4f4f4;
+}
+
+.ug-card-img img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 0;
+  transition: transform 0.4s ease;
+}
+
+.ug-card:hover .ug-card-img img { transform: scale(1.03); }
+
+@media (prefers-reduced-motion: reduce) {
+  .ug-card-img img { transition: none; }
+}
+
+.ug-card-title {
+  display: block;
+  margin-top: 16px;
+  font-size: 18px;
+  line-height: 1.3;
+}
+
+.ug-card-date {
+  display: block;
+  margin-top: 4px;
+  font-size: 15px;
+  color: #999;
+}
+
+.ug-card:hover .ug-card-title { color: #4470af; }
+
+@media (max-width: 768px) {
+  .ug-page { padding: 88px 6% 24px; }
+  .ug-intro { margin-bottom: 48px; }
+  .ug-intro h1 { font-size: 23pt; }
+  .ug-modules { gap: 40px; }
+  .ug-text + * { margin-top: -20px; }
+  .ug-text, .ug-image, .ug-grid { width: 100%; }
+  .ug-row { gap: 10px; }
+  .ug-grid-row { gap: 8px; }
+  .ug-grid-row + .ug-grid-row { margin-top: 8px; }
+  .ug-index { grid-template-columns: 1fr; gap: 40px; }
+}
+
+/* --- Undergrad pages: home + back-to-archive buttons (top left) --- */
+.ug-nav {
+  position: fixed;
+  top: 14px;
+  left: 20px;
+  z-index: 90;
+  display: flex;
+  gap: 10px;
+}
+
+.ug-nav-btn,
+.ug-nav-btn:link,
+.ug-nav-btn:visited {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: #E9E9E9;
+  color: var(--dock-x);
+  transition: transform 0.3s ease;
+}
+
+.ug-nav-btn svg {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+}
+
+/* arrow_back_ios sits left in its box; nudge it to look centred */
+.ug-nav-btn .ug-chevron { transform: translateX(240px); }
+
+.ug-nav-btn:hover { transform: scale(1.08); color: var(--dock-x); }
+
+@media (prefers-reduced-motion: reduce) {
+  .ug-nav-btn { transition: none; }
+}
+
+.ug-nav-btn:focus-visible {
+  outline: 2px solid #5866F2;
+  outline-offset: 3px;
+}
+
+@media (max-width: 768px) {
+  .ug-nav { top: 11px; left: 16px; gap: 8px; }
+}
+
+
+/* ==========================================================================
+   HOME: "OTHER STUFF I'VE MADE"
+   The last screen of the home page: one big ink pill, centred, linking to
+   the undergrad archive. Same look as the "View" and "About" pills, scaled
+   up, with Material Symbols' arrow_right_alt. js/home-end.js places this
+   screen right after the last card's and lifts the fixed "How Might We"
+   text and the dots off with the page as it scrolls in.
+   ========================================================================== */
+.home-more {
+  box-sizing: border-box;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 6vw;
+  scroll-snap-align: end;          /* the last snap: fills the screen */
+  scroll-snap-stop: always;
+  font-family: "Pontano Sans", sans-serif;
+}
+
+.left-col,
+.page-dock { translate: 0 calc(-1 * var(--end-lift, 0px)); }
+
+.more-pill,
+.more-pill:link,
+.more-pill:visited {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55em;
+  box-sizing: border-box;
+  height: 2.25em;
+  padding: 0 2.1em;
+  border-radius: 999px;
+  background-color: var(--dock-ink, #282827);
+  color: #ffffff;
+  font-size: clamp(26px, 4.1vw, 68px);
+  font-weight: 400;
+  line-height: 1;
+  white-space: nowrap;
+  transition: background-color 0.2s ease, scale 0.3s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.more-pill svg {
+  flex: none;
+  width: 1.15em;
+  height: 1.15em;
+  fill: currentColor;
+}
+
+@media (hover: hover) {
+  .more-pill:hover {
+    color: #ffffff;
+    background-color: #3a3a38;
+    scale: 1.02;
+  }
+}
+
+.more-pill:active { color: #ffffff; background-color: #3a3a38; }
+
+.more-pill:focus-visible { outline: 2px solid #5866F2; outline-offset: 4px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .more-pill { transition: none; }
+}
+
+@media (max-width: 768px) {
+  .more-pill,
+  .more-pill:link,
+  .more-pill:visited {
+    font-size: 20px;
+    height: 2.15em;
+    padding: 0 1.75em;
+  }
+}

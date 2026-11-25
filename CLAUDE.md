@@ -34,7 +34,11 @@ Linting is done in the editor by SonarQube for IDE (rules like `css:S9440`, `Web
 
 So **adding, removing or reordering a project** touches: every page's dock, the home card in `index.html`, the `sentences` and `caseData` objects in the `index.html` inline script (keyed by card index), the `#case-study-N` colour rule in CSS, and the `speculationrules` prefetch selectors. **Adding or renaming a section** on a case-study page means updating its `.dock-kid` link too.
 
+**Undergrad archive.** `undergrad/` holds older projects moved over from Adobe Portfolio. Each page uses the `.ug-*` classes (UNDERGRAD ARCHIVE section of the CSS): a `.ug-intro` header, then `.ug-modules` holding text, images, side-by-side `.ug-row`s, justified `.ug-grid` galleries and `.ug-embed` iframes in the original order. An inline `--w` on a block keeps its old width. `undergrad/index.html` (and its duplicate `work.html`) lists the projects. Most images still load from `cdn.myportfolio.com`; the few copies saved locally are in `cdn.myportfolio.com/`.
+
 **Home page behaviour** lives in the large inline `<script>` in `index.html`: intro fade, the bouncing "How Might We" dots, and an `IntersectionObserver` that writes each card's "How Might We …?" sentence, year and description into the left column. [js/home-mobile.js](js/home-mobile.js) repositions that text block on phones (≤768px).
+
+**Home page ending.** After the last card, `.home-more` is one more full-height screen with the big "Other Stuff I’ve Made" pill linking to `/undergrad/`. [js/home-end.js](js/home-end.js) sizes the space so that screen starts right below the last card's snapped screen, and while the page scrolls on to it, lifts the fixed `.left-col` text and the `.page-dock` dots by the same amount (`--end-lift`) so they leave with the card; `home-mobile.js` ignores that lift when it measures.
 
 **Scroll snapping.** `html` uses `scroll-snap-type: y mandatory` (except `about.html`, which has `class="no-snap"`). Home cards and case-study sections are snap targets; JS that measures "the section in view" assumes centre snapping on desktop and top snapping (offset 56px) on phones.
 
@@ -48,6 +52,7 @@ node -e "let h=0x811c9dc5;for(const b of Buffer.from(process.argv[1].trim().toLo
 
 ## Conventions
 
+- Internal links and asset paths are root-relative (`/css/style.css`, `/undergrad/piton.html`) so they resolve the same under `cleanUrls` (where `/undergrad/index.html` is served as `/undergrad`). Preview through a local server, not by opening files directly.
 - Breakpoint is `max-width: 768px` / `min-width: 769px` throughout CSS and JS.
 - Motion: every transition or animation gets a matching `@media (prefers-reduced-motion: reduce)` override placed right after the rule; JS smooth scrolling checks the same media query. (The soundscape animation is deliberately exempt, since it only starts when the visitor presses a button.)
 - Images live in `images/<page>/`; home cards are in `images/home/`. Content images get descriptive `alt` text, and videos are muted autoplay loops described by `aria-label`.

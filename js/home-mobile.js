@@ -29,7 +29,12 @@
     wrap.style.transform = 'none';
     var cardBottom = SNAP_TOP + card.offsetHeight;
     var dockTop = dock.getBoundingClientRect().top;
+    dockTop += parseFloat(dock.style.getPropertyValue('--end-lift')) || 0;   // see below
     var nowTop = hmw.getClientRects()[0].top;
+    // home-end.js lifts the fixed text and the dots with the page at the
+    // very end; measure as if they weren't lifted
+    var leftCol = document.querySelector('.left-col');
+    if (leftCol) nowTop += parseFloat(leftCol.style.getPropertyValue('--end-lift')) || 0;
     // Always size for a typical group (two headline lines, gap, two
     // description lines) so "How Might We" sits in one fixed spot, on load
     // and for every project.

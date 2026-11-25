@@ -1,11 +1,16 @@
-/* Home page: the page ends exactly where the last project card settles, so
-   once it has snapped into place there is nothing left to scroll.
+/* Home page ending. After the last project card comes one more full-height
+   screen holding the "Other Stuff I've Made" button (.home-more), which
+   links to the undergrad archive.
 
-   The empty <footer> spacer is sized to exactly the room the last snap
-   needs, or, when the last card's row already reaches past that point (on
-   phones), .main-grid is cut short there and the empty rest is clipped.
-   Recalculated whenever the window size changes, including phone toolbars
-   showing and hiding. */
+   1. The space under the last card is sized so that screen starts exactly
+      at the bottom of the window while the last card is snapped in place:
+      .main-grid is cut short where its last row reaches further (phones), or
+      given a bottom margin where the snap needs room. Recalculated whenever
+      the window size changes, including phone toolbars showing and hiding.
+   2. Scrolling on to it moves the page up a full screen; the fixed "How
+      Might We" text (.left-col) and the dot navigation (.page-dock) are
+      lifted by the same amount, so they leave with the last card and the
+      button has the screen to itself, like scrolling between projects. */
 (function () {
   var grid = document.querySelector('.main-grid');
   var rows = document.querySelectorAll('.right-col-grid > .sub-row');
@@ -13,7 +18,10 @@
   if (!grid || !lastRow) return;
   var lastLink = lastRow.querySelector(':scope > a');
   var footer = document.querySelector('body > footer');
+  var more = document.querySelector('.home-more');
+  var leftCol = document.querySelector('.left-col');
   var root = document.documentElement;
+  var settled = 0;
 
   // Where the page sits once the last card has snapped (in page coordinates).
   function settledY() {
@@ -35,25 +43,43 @@
     return (top + bottom) / 2 - (padTop + (vh - padTop - padBottom) / 2);
   }
 
+  var dock = document.querySelector('.page-dock');
+
+  function lift() {
+    var by = (more ? Math.max(0, window.scrollY - settled) : 0) + 'px';
+    if (leftCol) leftCol.style.setProperty('--end-lift', by);
+    if (dock) dock.style.setProperty('--end-lift', by);
+  }
+
   function fit() {
     grid.style.height = '';
+    grid.style.marginBottom = '';
     if (footer) { footer.style.display = ''; footer.style.height = '0px'; }
+    settled = settledY();
     var gridTop = grid.getBoundingClientRect().top + window.scrollY;
     var natural = grid.getBoundingClientRect().height;
-    var end = settledY() + window.innerHeight;          // page should end here
-    var extra = end - (gridTop + natural);
-    if (extra >= 0) {
+    var end = settled + window.innerHeight;             // last card's screen ends here
+    if (more) {
+      // the button's screen follows straight on from the last card's: add room
+      // as a margin (a taller grid would stretch its rows and move the cards)
+      // or cut the grid short (the cut-off part is empty)
+      if (footer) footer.style.display = 'none';
+      if (end >= gridTop + natural) grid.style.marginBottom = (end - gridTop - natural) + 'px';
+      else grid.style.height = (end - gridTop) + 'px';
+    } else if (end >= gridTop + natural) {
       // the snap needs a little room below the grid: the footer provides it
-      if (footer) footer.style.height = extra + 'px';
+      if (footer) footer.style.height = (end - gridTop - natural) + 'px';
     } else {
       // too much room below: cut the grid short (the cut-off part is empty)
       if (footer) footer.style.display = 'none';
-      grid.style.height = (natural + extra) + 'px';
+      grid.style.height = (end - gridTop) + 'px';
     }
+    lift();
   }
 
   grid.style.overflowY = 'clip';      // trims without becoming a scroll box
   fit();
   window.addEventListener('resize', fit);
   window.addEventListener('load', fit);
+  window.addEventListener('scroll', lift, { passive: true });
 })();
